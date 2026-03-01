@@ -16,6 +16,18 @@ import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
   {
+    name: "Valentine",
+    slug: "valentine",
+    description:
+      "Express your love with romantic cards and invitations for your special someone.",
+    icon: Heart,
+    image:
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#fff1f2]", // Soft pink/rose
+    iconColor: "text-[#e11d48]",
+    hoverColor: "group-hover:text-[#e11d48]",
+  },
+  {
     name: "Birthday",
     slug: "birthdays",
     description:
@@ -28,6 +40,17 @@ const CATEGORIES = [
     hoverColor: "group-hover:text-[#ef5350]",
   },
   {
+    name: "Wedding",
+    slug: "wedding",
+    description: "Elegant invitations and cards for the most beautiful unions.",
+    icon: Gem,
+    image:
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#fff8e1]", // Soft amber/cream
+    iconColor: "text-[#ffca28]",
+    hoverColor: "group-hover:text-[#ffca28]",
+  },
+  {
     name: "Thank You",
     slug: "thank-you",
     description: "Express gratitude with elegance. Cards that say it all.",
@@ -37,28 +60,6 @@ const CATEGORIES = [
     bgColor: "bg-[#e8eaf6]", // Lavender
     iconColor: "text-[#5c6bc0]",
     hoverColor: "group-hover:text-[#5c6bc0]",
-  },
-  {
-    name: "Love",
-    slug: "love",
-    description: "From romantic gestures to heartfelt affection.",
-    icon: Heart,
-    image:
-      "https://images.unsplash.com/photo-1481024387227-2e2124508cfa?auto=format&fit=crop&q=80&w=400&h=400",
-    bgColor: "bg-[#fce4ec]", // Soft pink
-    iconColor: "text-[#ec407a]",
-    hoverColor: "group-hover:text-[#ec407a]",
-  },
-  {
-    name: "Wedding",
-    slug: "wedding",
-    description: "Celebrate the union of two hearts with premium cards.",
-    icon: Gem,
-    image:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400&h=400",
-    bgColor: "bg-[#fff8e1]", // Soft amber/cream
-    iconColor: "text-[#ffca28]",
-    hoverColor: "group-hover:text-[#ffca28]",
   },
   {
     name: "Congratulations",
@@ -96,10 +97,10 @@ export default function CategoriesPage() {
           BROWSE BY OCCASION
         </p>
         <h1 className="font-heading text-5xl md:text-6xl font-bold mb-6 text-foreground">
-          Categories
+          Occasions
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground">
-          Find the perfect card for every moment and{" "}
+          Find the perfect card or invitation for every moment and{" "}
           <br className="hidden md:block" /> milestone.
         </p>
       </motion.div>

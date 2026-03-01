@@ -8,29 +8,80 @@ import { ArrowLeft, SlidersHorizontal } from "lucide-react";
 
 // Mock data
 const PRODUCTS: Product[] = [
-  { id: "101", title: "Sunny Disposition", price: 4.50, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays" },
-  { id: "102", title: "Floral Wreath", price: 5.00, image: "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays", isNew: true },
-  { id: "103", title: "Minimalist Cake", price: 3.99, image: "https://images.unsplash.com/photo-1481024387227-2e2124508cfa?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays" },
-  { id: "104", title: "Confetti Blast", price: 4.99, image: "https://images.unsplash.com/photo-1516244671391-62ecafdcabf7?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays" },
-  { id: "105", title: "Gold Foil Ages", price: 6.50, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays", isNew: true },
-  { id: "106", title: "Simple Cheers", price: 4.00, image: "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=400&h=533", category: "Birthdays" },
+  {
+    id: "101",
+    title: "Sunny Disposition",
+    price: 4.5,
+    image:
+      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Birthdays",
+  },
+  {
+    id: "102",
+    title: "Floral Wreath",
+    price: 5.0,
+    image:
+      "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Birthdays",
+    isNew: true,
+  },
+  {
+    id: "103",
+    title: "Valentine Bouquet",
+    price: 8.99,
+    image:
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Valentine",
+    isNew: true,
+  },
+  {
+    id: "104",
+    title: "Wedding Gala Invitation",
+    price: 15.0,
+    image:
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Wedding",
+    isInvitation: true,
+  },
+  {
+    id: "105",
+    title: "Eternal Love Valentine",
+    price: 6.5,
+    image:
+      "https://images.unsplash.com/photo-1481024387227-2e2124508cfa?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Valentine",
+    isInvitation: true,
+  },
+  {
+    id: "106",
+    title: "Simple Wedding Bells",
+    price: 4.0,
+    image:
+      "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=400&h=533",
+    category: "Wedding",
+  },
 ];
 
 export default function CategoryPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const categoryName = slug ? slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "Category";
+  const categoryName = slug
+    ? slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : "Category";
 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumbs & Header */}
       <div className="mb-12">
-        <Link href="/categories" className="inline-flex items-center text-sm text-primary hover:underline mb-6 font-medium">
-          <ArrowLeft className="w-4 h-4 mr-1" /> Back to Categories
+        <Link
+          href="/categories"
+          className="inline-flex items-center text-sm text-primary hover:underline mb-6 font-medium"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" /> Back to Occasions
         </Link>
-        
+
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
@@ -41,8 +92,8 @@ export default function CategoryPage() {
               Showing 24 beautiful designs for {categoryName.toLowerCase()}.
             </p>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-3"
