@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Mail, Lock, User, Chrome } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import { useAuthStore } from "@/store/authStore";
 export default function RegisterPage() {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
-  
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +25,11 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/register", { name, email, password });
+      const response = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
       setUser(response.data.user);
       router.push("/admin");
     } catch (err: any) {
@@ -45,13 +50,29 @@ export default function RegisterPage() {
         <div className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/2 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
+          >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/logo.png"
+              alt="Joy Greetly"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-contain"
+            />
+          </div>
 
-          <h1 className="font-heading text-4xl font-bold mb-2">Create Account</h1>
-          <p className="text-muted-foreground mb-8">Join the GreetingJoy community today</p>
+          <h1 className="font-heading text-4xl font-bold mb-2">
+            Create Account
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            Join the JoyGreetly community today
+          </p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
@@ -60,7 +81,9 @@ export default function RegisterPage() {
               </div>
             )}
             <div>
-              <label className="block text-sm font-semibold mb-2 ml-1">Full Name</label>
+              <label className="block text-sm font-semibold mb-2 ml-1">
+                Full Name
+              </label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -75,7 +98,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2 ml-1">Email Address</label>
+              <label className="block text-sm font-semibold mb-2 ml-1">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -90,7 +115,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2 ml-1">Password</label>
+              <label className="block text-sm font-semibold mb-2 ml-1">
+                Password
+              </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -105,8 +132,8 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               className="w-full bg-primary text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -128,7 +155,10 @@ export default function RegisterPage() {
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary font-bold hover:underline">
+            <Link
+              href="/login"
+              className="text-primary font-bold hover:underline"
+            >
               Sign in
             </Link>
           </p>

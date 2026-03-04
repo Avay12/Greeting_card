@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,11 +44,15 @@ export default function Footer() {
               href="/"
               className="flex items-center gap-2 mb-4 group inline-flex"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">
-                G
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Joy Greetly"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+              />
               <span className="font-heading font-bold text-xl tracking-tight text-foreground">
-                Greeting<span className="text-primary">Joy</span>
+                Joy<span className="text-primary">Greetly</span>
               </span>
             </Link>
             <p className="text-sm max-w-xs mb-6">
@@ -101,7 +106,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-center md:text-left">
-            &copy; {new Date().getFullYear()} GreetingJoy. All rights reserved.
+            &copy; {new Date().getFullYear()} JoyGreetly. All rights reserved.
           </p>
           <div className="flex gap-4 text-xs">
             <Link

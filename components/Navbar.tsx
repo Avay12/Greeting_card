@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Search, ShoppingBag, Menu, X, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -55,14 +56,15 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <motion.div
-            whileHover={{ rotate: 15 }}
-            className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold"
-          >
-            G
-          </motion.div>
+          <Image
+            src="/logo.png"
+            alt="Joy Greetly"
+            width={32}
+            height={32}
+            className="w-8 h-8 object-contain"
+          />
           <span className="font-heading font-bold text-xl tracking-tight hidden sm:block">
-            Greeting<span className="text-primary">Joy</span>
+            Joy<span className="text-primary">Greetly</span>
           </span>
         </Link>
 

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Mail, Lock, Chrome } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import { useAuthStore } from "@/store/authStore";
 export default function LoginPage() {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -48,13 +49,27 @@ export default function LoginPage() {
         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
+          >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/logo.png"
+              alt="Joy Greetly"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-contain"
+            />
+          </div>
 
           <h1 className="font-heading text-4xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-muted-foreground mb-8">Sign in to your GreetingJoy account</p>
+          <p className="text-muted-foreground mb-8">
+            Sign in to your JoyGreeting account
+          </p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
@@ -63,7 +78,9 @@ export default function LoginPage() {
               </div>
             )}
             <div>
-              <label className="block text-sm font-semibold mb-2 ml-1">Email Address</label>
+              <label className="block text-sm font-semibold mb-2 ml-1">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
@@ -80,7 +97,9 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2 ml-1">
                 <label className="block text-sm font-semibold">Password</label>
-                <Link href="#" className="text-sm text-primary hover:underline">Forgot?</Link>
+                <Link href="#" className="text-sm text-primary hover:underline">
+                  Forgot?
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -95,8 +114,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               className="w-full bg-primary text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -118,7 +137,10 @@ export default function LoginPage() {
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/register" className="text-primary font-bold hover:underline">
+            <Link
+              href="/register"
+              className="text-primary font-bold hover:underline"
+            >
               Register now
             </Link>
           </p>

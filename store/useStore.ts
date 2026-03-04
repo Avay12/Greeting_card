@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface Product {
   id: string;
@@ -37,38 +37,51 @@ export const useStore = create<StoreState>()(
     (set, get) => ({
       // Cart implementation
       cart: [],
-      addToCart: (product) => set((state) => {
-        const existingItem = state.cart.find((item) => item.id === product.id);
-        if (existingItem) {
-          return {
-            cart: state.cart.map((item) =>
-              item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-            ),
-          };
-        }
-        return { cart: [...state.cart, { ...product, quantity: 1 }] };
-      }),
-      removeFromCart: (productId) => set((state) => ({
-        cart: state.cart.filter((item) => item.id !== productId),
-      })),
-      updateQuantity: (productId, quantity) => set((state) => ({
-        cart: state.cart.map((item) =>
-          item.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item
-        ),
-      })),
+      addToCart: (product) =>
+        set((state) => {
+          const existingItem = state.cart.find(
+            (item) => item.id === product.id,
+          );
+          if (existingItem) {
+            return {
+              cart: state.cart.map((item) =>
+                item.id === product.id
+                  ? { ...item, quantity: item.quantity + 1 }
+                  : item,
+              ),
+            };
+          }
+          return { cart: [...state.cart, { ...product, quantity: 1 }] };
+        }),
+      removeFromCart: (productId) =>
+        set((state) => ({
+          cart: state.cart.filter((item) => item.id !== productId),
+        })),
+      updateQuantity: (productId, quantity) =>
+        set((state) => ({
+          cart: state.cart.map((item) =>
+            item.id === productId
+              ? { ...item, quantity: Math.max(1, quantity) }
+              : item,
+          ),
+        })),
       clearCart: () => set({ cart: [] }),
       cartTotal: () => {
         const { cart } = get();
-        return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        return cart.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0,
+        );
       },
 
       // Favorites implementation
       favorites: [],
-      toggleFavorite: (productId) => set((state) => ({
-        favorites: state.favorites.includes(productId)
-          ? state.favorites.filter((id) => id !== productId)
-          : [...state.favorites, productId],
-      })),
+      toggleFavorite: (productId) =>
+        set((state) => ({
+          favorites: state.favorites.includes(productId)
+            ? state.favorites.filter((id) => id !== productId)
+            : [...state.favorites, productId],
+        })),
       isFavorite: (productId) => get().favorites.includes(productId),
 
       // Search implementation
@@ -76,7 +89,7 @@ export const useStore = create<StoreState>()(
       setSearchOpen: (isOpen) => set({ isSearchOpen: isOpen }),
     }),
     {
-      name: 'greeting-joy-storage',
-    }
-  )
+      name: "joy-greetly-storage",
+    },
+  ),
 );

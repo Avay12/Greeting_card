@@ -19,8 +19,14 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Greeting Joy - Premium Greeting Cards",
-  description: "Share smiles and celebrate special moments with our premium, handcrafted greeting cards.",
+  title: "Joy Greetly - Premium Greeting Cards",
+  description:
+    "Share smiles and celebrate special moments with our premium, handcrafted greeting cards.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +42,7 @@ export default function RootLayout({
           geistSans.variable,
           geistMono.variable,
           outfit.variable,
-          "min-h-screen flex flex-col bg-gray-50"
+          "min-h-screen flex flex-col bg-gray-50",
         )}
       >
         {children}
