@@ -16,6 +16,7 @@ export interface Product {
   category: string;
   isBestseller?: boolean;
   isNew?: boolean;
+  isInvitation?: boolean;
 }
 
 interface ProductCardProps {
@@ -24,7 +25,11 @@ interface ProductCardProps {
   index?: number;
 }
 
-export default function ProductCard({ product, className, index = 0 }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  className,
+  index = 0,
+}: ProductCardProps) {
   const { addToCart, toggleFavorite, isFavorite } = useStore();
   const [isAdded, setIsAdded] = useState(false);
   const favorited = isFavorite(product.id);
@@ -53,15 +58,33 @@ export default function ProductCard({ product, className, index = 0 }: ProductCa
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={cn("group flex flex-col bg-card rounded-[2rem] overflow-hidden border shadow-sm hover:shadow-lg transition-shadow duration-300", className)}
+      className={cn(
+        "group flex flex-col bg-card rounded-[2rem] overflow-hidden border shadow-sm hover:shadow-lg transition-shadow duration-300",
+        className,
+      )}
     >
-      <Link href={`/product/${product.id}`} className="block relative aspect-[4/5] overflow-hidden bg-muted">
-        {product.isBestseller && (
-          <div className="absolute top-4 left-4 z-10 bg-[#e3c18b] text-[#5e4b2d] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-            Bestseller
-          </div>
-        )}
-        
+      <Link
+        href={`/product/${product.id}`}
+        className="block relative aspect-[4/5] overflow-hidden bg-muted"
+      >
+        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+          {product.isBestseller && (
+            <div className="bg-[#e3c18b] text-[#5e4b2d] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wider">
+              Bestseller
+            </div>
+          )}
+          {product.isNew && (
+            <div className="bg-[#e26b58] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wider">
+              New
+            </div>
+          )}
+          {product.isInvitation && (
+            <div className="bg-[#5c6bc0] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wider">
+              Invitation
+            </div>
+          )}
+        </div>
+
         <Image
           src={product.image}
           alt={product.title}
@@ -76,9 +99,9 @@ export default function ProductCard({ product, className, index = 0 }: ProductCa
             onClick={handleToggleFavorite}
             className={cn(
               "p-2.5 rounded-full shadow-lg backdrop-blur-md transition-all duration-300",
-              favorited 
-                ? "bg-primary text-white" 
-                : "bg-white/80 text-foreground hover:bg-primary hover:text-white"
+              favorited
+                ? "bg-primary text-white"
+                : "bg-white/80 text-foreground hover:bg-primary hover:text-white",
             )}
           >
             <Heart className={cn("w-5 h-5", favorited && "fill-current")} />
@@ -87,12 +110,16 @@ export default function ProductCard({ product, className, index = 0 }: ProductCa
             onClick={handleAddToCart}
             className={cn(
               "p-2.5 rounded-full shadow-lg backdrop-blur-md transition-all duration-300",
-              isAdded 
-                ? "bg-green-500 text-white" 
-                : "bg-white/80 text-foreground hover:bg-primary hover:text-white"
+              isAdded
+                ? "bg-green-500 text-white"
+                : "bg-white/80 text-foreground hover:bg-primary hover:text-white",
             )}
           >
-            {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+            {isAdded ? (
+              <Check className="w-5 h-5" />
+            ) : (
+              <ShoppingCart className="w-5 h-5" />
+            )}
           </button>
         </div>
       </Link>

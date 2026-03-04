@@ -10,8 +10,9 @@ import { useStore } from "@/store/useStore";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/categories", label: "Categories" },
-  { href: "/featured", label: "Featured" },
+  { href: "/categories/valentine", label: "Valentine" },
+  { href: "/categories/wedding", label: "Wedding" },
+  { href: "/categories", label: "Occasions" },
   { href: "/about", label: "About Us" },
 ];
 
@@ -23,7 +24,7 @@ export default function Navbar() {
   const cart = useStore((state) => state.cart);
   const favorites = useStore((state) => state.favorites);
   const setSearchOpen = useStore((state) => state.setSearchOpen);
-  
+
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
@@ -38,15 +39,15 @@ export default function Navbar() {
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 flex flex-col items-center pointer-events-none",
-        isScrolled ? "pt-4 px-4" : "pt-0 px-0"
+        isScrolled ? "pt-4 px-4" : "pt-0 px-0",
       )}
     >
-      <div 
+      <div
         className={cn(
           "pointer-events-auto w-full flex items-center justify-between transition-all duration-500",
-          isScrolled 
-            ? "max-w-5xl glass bg-white/70 backdrop-blur-md shadow-lg rounded-full py-3 px-6 md:px-8 border border-white/40" 
-            : "max-w-full bg-transparent py-5 px-4 md:px-8"
+          isScrolled
+            ? "max-w-5xl glass bg-white/70 backdrop-blur-md shadow-lg rounded-full py-3 px-6 md:px-8 border border-white/40"
+            : "max-w-full bg-transparent py-5 px-4 md:px-8",
         )}
       >
         {/* Logo */}
@@ -72,7 +73,7 @@ export default function Navbar() {
                 href={link.href}
                 className={cn(
                   "relative text-sm font-medium transition-colors hover:text-primary",
-                  isActive ? "text-primary" : "text-foreground/80"
+                  isActive ? "text-primary" : "text-foreground/80",
                 )}
               >
                 {link.label}
@@ -90,13 +91,16 @@ export default function Navbar() {
 
         {/* Icons */}
         <div className="flex items-center gap-3 md:gap-4">
-          <button 
+          <button
             className="p-2 text-foreground/80 hover:text-primary transition-colors hidden sm:block"
             onClick={() => setSearchOpen(true)}
           >
             <Search className="w-5 h-5" />
           </button>
-          <Link href="/favorites" className="p-2 text-foreground/80 hover:text-primary transition-colors hidden sm:block relative">
+          <Link
+            href="/favorites"
+            className="p-2 text-foreground/80 hover:text-primary transition-colors hidden sm:block relative"
+          >
             <Heart className="w-5 h-5" />
             {favorites.length > 0 && (
               <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center">
@@ -104,7 +108,10 @@ export default function Navbar() {
               </span>
             )}
           </Link>
-          <Link href="/cart" className="p-2 text-foreground/80 hover:text-primary transition-colors relative">
+          <Link
+            href="/cart"
+            className="p-2 text-foreground/80 hover:text-primary transition-colors relative"
+          >
             <ShoppingBag className="w-5 h-5" />
             {cartItemCount > 0 && (
               <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-primary text-[10px] font-bold text-white flex items-center justify-center">
@@ -118,7 +125,11 @@ export default function Navbar() {
             className="p-2 md:hidden text-foreground/80 hover:text-primary"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -132,9 +143,9 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20, height: 0 }}
             className={cn(
               "md:hidden pointer-events-auto w-full transition-all duration-300 overflow-hidden",
-              isScrolled 
-                ? "max-w-5xl mt-2 glass bg-white/70 backdrop-blur-md shadow-lg rounded-[2rem] border border-white/40" 
-                : "glass border-t mt-3"
+              isScrolled
+                ? "max-w-5xl mt-2 glass bg-white/70 backdrop-blur-md shadow-lg rounded-[2rem] border border-white/40"
+                : "glass border-t mt-3",
             )}
           >
             <nav className="p-4 flex flex-col gap-2">
@@ -145,7 +156,9 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
                     "block px-4 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-muted/80",
-                    pathname === link.href ? "bg-muted text-primary" : "text-foreground/80"
+                    pathname === link.href
+                      ? "bg-muted text-primary"
+                      : "text-foreground/80",
                   )}
                 >
                   {link.label}
