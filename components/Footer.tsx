@@ -7,10 +7,11 @@ const FOOTER_LINKS = [
   {
     title: "Occasions",
     links: [
-      { label: "Valentine", href: "/categories/valentine" },
-      { label: "Wedding", href: "/categories/wedding" },
-      { label: "Birthdays", href: "/categories/birthdays" },
-      { label: "Thank You", href: "/categories/thank-you" },
+      { label: "Valentine", href: "/occasions/valentine" },
+      { label: "Anniversary", href: "/occasions/anniversary" },
+      { label: "Wedding", href: "/occasions/wedding" },
+      { label: "Birthdays", href: "/occasions/birthdays" },
+      { label: "Thank You", href: "/occasions/thank-you" },
     ],
   },
   {

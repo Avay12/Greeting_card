@@ -11,9 +11,11 @@ import { useStore } from "@/store/useStore";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/categories/valentine", label: "Valentine" },
-  { href: "/categories/wedding", label: "Wedding" },
-  { href: "/categories", label: "Occasions" },
+  { href: "/occasions/anniversary", label: "Anniversary" },
+  { href: "/occasions/valentine", label: "Valentine" },
+  { href: "/occasions/wedding", label: "Wedding" },
+  { href: "/occasions/birthday", label: "Birthday" },
+  { href: "/occasions", label: "Occasions" },
   { href: "/about", label: "About Us" },
 ];
 
