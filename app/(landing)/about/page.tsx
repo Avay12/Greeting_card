@@ -79,7 +79,7 @@ export default function AboutPage() {
         >
           <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl relative z-10">
             <Image
-              src="https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=800&h=600"
+              src="/images/products/birthday.png"
               alt="Design Studio"
               fill
               className="object-cover"
@@ -135,7 +135,7 @@ export default function AboutPage() {
         </h2>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href="/categories"
+            href="/occasions"
             className="bg-primary text-white font-bold px-10 py-5 rounded-full shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
           >
             Browse All Cards

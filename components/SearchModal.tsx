@@ -9,9 +9,27 @@ import Image from "next/image";
 
 // Placeholder data for search suggestions
 const SUGGESTIONS = [
-  { id: "1", name: "Floral Birthday Card", price: 12.99, image: "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=200&h=200", category: "Birthday" },
-  { id: "2", name: "Wedding Bells Invitation", price: 15.00, image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=200&h=200", category: "Wedding" },
-  { id: "3", name: "Thank You Botanical", price: 8.50, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=200&h=200", category: "Thank You" },
+  {
+    id: "1",
+    name: "Floral Birthday Card",
+    price: 12.99,
+    image: "/images/products/birthday.png",
+    category: "Birthday",
+  },
+  {
+    id: "2",
+    name: "Wedding Bells Invitation",
+    price: 15.0,
+    image: "/images/products/wedding.png",
+    category: "Wedding",
+  },
+  {
+    id: "3",
+    name: "Thank You Botanical",
+    price: 8.5,
+    image: "/images/products/thankyou.png",
+    category: "Thank You",
+  },
 ];
 
 export default function SearchModal() {
@@ -64,12 +82,20 @@ export default function SearchModal() {
               {/* Suggestions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">Popular Searches</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">
+                    Popular Searches
+                  </h3>
                   <div className="flex flex-wrap gap-3">
-                    {["Birthday", "Wedding", "Love", "Christmas", "Thank You"].map((tag) => (
+                    {[
+                      "Birthday",
+                      "Wedding",
+                      "Love",
+                      "Christmas",
+                      "Thank You",
+                    ].map((tag) => (
                       <Link
                         key={tag}
-                        href={`/categories/${tag.toLowerCase()}`}
+                        href={`/occasions/${tag.toLowerCase()}`}
                         onClick={() => setSearchOpen(false)}
                         className="px-6 py-3 bg-muted hover:bg-primary hover:text-white rounded-full text-sm font-medium transition-all"
                       >
@@ -80,7 +106,9 @@ export default function SearchModal() {
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">Suggestions</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">
+                    Suggestions
+                  </h3>
                   <div className="space-y-4">
                     {SUGGESTIONS.map((item) => (
                       <Link
@@ -90,11 +118,18 @@ export default function SearchModal() {
                         className="flex items-center gap-4 p-3 rounded-2xl hover:bg-muted transition-colors group"
                       >
                         <div className="relative w-16 h-16 rounded-xl overflow-hidden aspect-square">
-                          <Image src={item.image} alt={item.name} fill className="object-cover" />
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">${item.price}</p>
+                          <p className="text-sm text-muted-foreground">
+                            ${item.price}
+                          </p>
                         </div>
                         <ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                       </Link>

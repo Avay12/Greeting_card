@@ -11,6 +11,10 @@ import {
   PartyPopper,
   Snowflake,
   ArrowRight,
+  Sparkles,
+  Baby,
+  GraduationCap,
+  Flower2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,20 +25,18 @@ const CATEGORIES = [
     description:
       "Express your love with romantic cards and invitations for your special someone.",
     icon: Heart,
-    image:
-      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=400&h=400",
+    image: "/images/products/valentine.png",
     bgColor: "bg-[#fff1f2]", // Soft pink/rose
     iconColor: "text-[#e11d48]",
     hoverColor: "group-hover:text-[#e11d48]",
   },
   {
     name: "Birthday",
-    slug: "birthdays",
+    slug: "birthday",
     description:
       "Celebrate another trip around the sun with our beautiful birthday cards.",
     icon: Gift,
-    image:
-      "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=400&h=400",
+    image: "/images/products/birthday.png",
     bgColor: "bg-[#ffebee]", // Soft red/pink
     iconColor: "text-[#ef5350]",
     hoverColor: "group-hover:text-[#ef5350]",
@@ -44,8 +46,7 @@ const CATEGORIES = [
     slug: "wedding",
     description: "Elegant invitations and cards for the most beautiful unions.",
     icon: Gem,
-    image:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=400&h=400",
+    image: "/images/products/wedding.png",
     bgColor: "bg-[#fff8e1]", // Soft amber/cream
     iconColor: "text-[#ffca28]",
     hoverColor: "group-hover:text-[#ffca28]",
@@ -55,8 +56,7 @@ const CATEGORIES = [
     slug: "thank-you",
     description: "Express gratitude with elegance. Cards that say it all.",
     icon: Smile,
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=400&h=400",
+    image: "/images/products/thankyou.png",
     bgColor: "bg-[#e8eaf6]", // Lavender
     iconColor: "text-[#5c6bc0]",
     hoverColor: "group-hover:text-[#5c6bc0]",
@@ -67,7 +67,7 @@ const CATEGORIES = [
     description: "Mark achievements and milestones in style.",
     icon: PartyPopper,
     image:
-      "https://images.unsplash.com/photo-1516244671391-62ecafdcabf7?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#e0f2f1]", // Soft mint
     iconColor: "text-[#26a69a]",
     hoverColor: "group-hover:text-[#26a69a]",
@@ -82,6 +82,51 @@ const CATEGORIES = [
     bgColor: "bg-[#e3f2fd]", // Light blue
     iconColor: "text-[#42a5f5]",
     hoverColor: "group-hover:text-[#42a5f5]",
+  },
+  {
+    name: "Anniversary",
+    slug: "anniversary",
+    description:
+      "Celebrate years of love and partnership with our elegant cards.",
+    icon: Sparkles,
+    image:
+      "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#fefce8]", // Soft yellow/gold
+    iconColor: "text-[#d97706]",
+    hoverColor: "group-hover:text-[#d97706]",
+  },
+  {
+    name: "Baby Shower",
+    slug: "baby-shower",
+    description: "Welcome the little ones with adorable cards and invitations.",
+    icon: Baby,
+    image:
+      "https://images.unsplash.com/photo-1519689689253-3c9f28d098e6?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#f0fdf4]", // Soft green
+    iconColor: "text-[#16a34a]",
+    hoverColor: "group-hover:text-[#16a34a]",
+  },
+  {
+    name: "Graduation",
+    slug: "graduation",
+    description: "Honoring achievements and bright futures ahead.",
+    icon: GraduationCap,
+    image:
+      "https://images.unsplash.com/photo-1523050853064-dbad350c7469?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#eff6ff]", // Soft blue
+    iconColor: "text-[#2563eb]",
+    hoverColor: "group-hover:text-[#2563eb]",
+  },
+  {
+    name: "Sympathy",
+    slug: "sympathy",
+    description: "Thoughtful messages of support during difficult times.",
+    icon: Flower2,
+    image:
+      "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=400&h=400",
+    bgColor: "bg-[#f8fafc]", // Muted slate
+    iconColor: "text-[#475569]",
+    hoverColor: "group-hover:text-[#475569]",
   },
 ];
 
@@ -117,7 +162,7 @@ export default function CategoriesPage() {
               transition={{ delay: i * 0.1 }}
             >
               <Link
-                href={`/categories/${category.slug}`}
+                href={`/occasions/${category.slug}`}
                 className={cn(
                   "group block relative overflow-hidden rounded-[2rem] p-8 md:p-10 transition-all hover:shadow-2xl hover:-translate-y-2 border border-black/5 h-full min-h-[320px] flex flex-col",
                   category.bgColor,

@@ -1,119 +1,53 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 import ProductCard, { Product } from "@/components/ProductCard";
-
-// Mock data for featured products
-const ALL_PRODUCTS: Product[] = [
-  {
-    id: "1",
-    title: "Happy Birthday Blossom",
-    price: 4.99,
-    image:
-      "https://images.unsplash.com/photo-1583847268964-b28e50b58257?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Birthday",
-    isBestseller: true,
-  },
-  {
-    id: "2",
-    title: "Minimalist Thank You",
-    price: 3.5,
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Thank You",
-    isBestseller: true,
-  },
-  {
-    id: "3",
-    title: "Art Deco Congratulations",
-    price: 5.99,
-    image:
-      "https://images.unsplash.com/photo-1516244671391-62ecafdcabf7?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Congratulations",
-  },
-  {
-    id: "4",
-    title: "With Love Roses",
-    price: 6.5,
-    image:
-      "https://images.unsplash.com/photo-1481024387227-2e2124508cfa?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Valentine",
-  },
-  {
-    id: "5",
-    title: "Winter Pines Seasonal",
-    price: 4.99,
-    image:
-      "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Seasonal",
-  },
-  {
-    id: "6",
-    title: "Sunset Thinking of You",
-    price: 3.99,
-    image:
-      "https://images.unsplash.com/photo-1478147427282-58a871190bc3?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Thank You",
-  },
-  {
-    id: "7",
-    title: "Gold Foil Wedding",
-    price: 6.99,
-    image:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Wedding",
-    isBestseller: true,
-    isInvitation: true,
-  },
-  {
-    id: "8",
-    title: "Party Time Birthday",
-    price: 4.5,
-    image:
-      "https://images.unsplash.com/photo-1530103862676-de889fa09fce?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Birthday",
-  },
-  {
-    id: "9",
-    title: "Valentine's Rose Heart",
-    price: 5.99,
-    image:
-      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Valentine",
-    isBestseller: true,
-  },
-  {
-    id: "10",
-    title: "Forever Yours Invitation",
-    price: 12.0,
-    image:
-      "https://images.unsplash.com/photo-1516589174184-c685265e48d6?auto=format&fit=crop&q=80&w=800&h=1000",
-    category: "Valentine",
-    isNew: true,
-    isInvitation: true,
-  },
-];
-
-const CATEGORY_TABS = [
-  "All",
-  "Valentine",
-  "Birthday",
-  "Wedding",
-  "Thank You",
-  "Congratulations",
-  "Seasonal",
-];
+import { TEMPLATES } from "@/lib/data/template";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All");
 
-  const filteredProducts =
-    activeTab === "All"
-      ? ALL_PRODUCTS
-      : ALL_PRODUCTS.filter((p) => p.category === activeTab);
+  // Flatten all templates into a single products array for the landing page
+  const allTemplates = useMemo(() => {
+    const products: Product[] = [];
+    for (const category in TEMPLATES) {
+      const templates = TEMPLATES[category as keyof typeof TEMPLATES];
+      for (const id in templates) {
+        const t = templates[id];
+        products.push({
+          id: t.id,
+          title: t.name,
+          price: t.price,
+          image: t.image,
+          category: category
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase()),
+          isNew: true,
+          isBestseller: Math.random() > 0.7, // Randomly mark some as bestsellers for variety
+        });
+      }
+    }
+    return products;
+  }, []);
+
+  const CATEGORY_TABS = useMemo(() => {
+    const categories = [
+      "All",
+      ...Object.keys(TEMPLATES).map((c) =>
+        c.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      ),
+    ];
+    return categories;
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    return activeTab === "All"
+      ? allTemplates
+      : allTemplates.filter((p) => p.category === activeTab);
+  }, [activeTab, allTemplates]);
 
   return (
     <div className="flex flex-col gap-24 mb-24">
@@ -184,12 +118,10 @@ export default function Home() {
                 }}
                 className="absolute top-20 left-10 w-64 h-80 bg-white rounded-2xl shadow-xl border p-4 z-20"
               >
-                <div className="w-full h-full bg-primary/10 rounded-xl flex items-center justify-center">
-                  <span className="text-4xl text-center font-heading font-medium text-primary">
-                    Thank
-                    <br />
-                    You
-                  </span>
+                <div className="w-full h-full bg-primary/10 rounded-xl flex items-center justify-center text-center">
+                  <h1 className="font-heading font-black text-3xl leading-none text-primary">
+                    THANK YOU
+                  </h1>
                 </div>
               </motion.div>
             </motion.div>
@@ -197,13 +129,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Our Collection Section (Replaces Shop by Occasion & Trending Now) */}
+      {/* 2. Our Collection Section */}
       <section id="collection" className="container mx-auto px-4 scroll-mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="text-[#e26b58] font-bold tracking-widest text-sm uppercase mb-3">
             CURATED SELECTION
           </p>
-          <h2 className="font-heading text-5xl md:text-6xl font-bold mb-4">
+          <h2 className="font-heading text-5xl md:text-6xl font-bold mb-4 tracking-tighter">
             Our Collection
           </h2>
           <p className="text-muted-foreground text-xl">
@@ -212,16 +144,16 @@ export default function Home() {
         </div>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-16">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-16 overflow-x-auto pb-4 scrollbar-hide">
           {CATEGORY_TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-300
+              className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 whitespace-nowrap
                 ${
                   activeTab === tab
-                    ? "bg-[#e26b58] text-white shadow-md"
-                    : "bg-[#f5f1ea] text-foreground/80 hover:bg-[#eadecc]"
+                    ? "bg-[#e26b58] text-white shadow-xl shadow-primary/20 -translate-y-0.5"
+                    : "bg-[#f5f1ea] text-foreground/70 hover:bg-[#eadecc]"
                 }
               `}
             >
@@ -233,17 +165,17 @@ export default function Home() {
         {/* Product Grid with Animation */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product, i) => (
               <motion.div
                 key={product.id}
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
               >
                 <ProductCard product={product} />
               </motion.div>
@@ -253,9 +185,10 @@ export default function Home() {
 
         {/* Empty State / No Results */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-24 text-muted-foreground">
-            <p className="text-lg">
-              Check back soon for new designs in this category!
+          <div className="text-center py-32 text-muted-foreground bg-muted/30 rounded-[3rem] border-2 border-dashed">
+            <p className="text-2xl font-bold">Check back soon!</p>
+            <p className="mt-2">
+              We're currently designing new cards for this collection.
             </p>
           </div>
         )}

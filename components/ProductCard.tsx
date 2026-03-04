@@ -65,7 +65,10 @@ export default function ProductCard({
     >
       <Link
         href={`/product/${product.id}`}
-        className="block relative aspect-[4/5] overflow-hidden bg-muted"
+        className={cn(
+          "block relative overflow-hidden bg-muted",
+          className?.includes("flex-row") ? "w-1/3 h-full" : "aspect-[4/5]",
+        )}
       >
         <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
           {product.isBestseller && (
@@ -124,7 +127,12 @@ export default function ProductCard({
         </div>
       </Link>
 
-      <div className="p-6 flex flex-col gap-1.5 bg-card">
+      <div
+        className={cn(
+          "p-6 flex flex-col gap-1.5 bg-card",
+          className?.includes("flex-row") ? "justify-center flex-1" : "",
+        )}
+      >
         <div className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">
           {product.category}
         </div>
