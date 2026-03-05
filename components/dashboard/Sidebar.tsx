@@ -12,7 +12,7 @@ import {
   Info,
   Settings,
   ShoppingCart,
-  Plus
+  Plus,
 } from "lucide-react";
 
 export function Sidebar() {
@@ -30,9 +30,8 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 z-50 h-screen w-64 border-r border-rose-100 bg-[#fafaf9] transition-transform duration-300 ease-in-out md:translate-x-0 shadow-sm">
+    <aside className="fixed left-0 top-0 z-50 h-screen w-64 border-r border-border bg-card transition-transform duration-300 ease-in-out md:translate-x-0 shadow-sm">
       <div className="flex h-full flex-col overflow-y-auto">
-        
         {/* Logo Section */}
         <div className="p-6 pb-2">
           <Link href="/dashboard" className="flex items-center gap-2">
@@ -43,24 +42,28 @@ export function Sidebar() {
               height={32}
               className="h-8 w-8 object-contain"
             />
-            <span className="text-xl font-bold tracking-tight text-[#1c1917]">
-              Joy<span className="text-[#f43f5e]">Greetly</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              Joy<span className="text-primary">Greetly</span>
             </span>
           </Link>
         </div>
 
         {/* Credit Block */}
         <div className="px-4 py-4">
-          <div className="rounded-2xl bg-gradient-to-br from-[#f43f5e] to-[#fb7185] p-4 flex items-center justify-between shadow-lg shadow-rose-200/50">
+          <div className="rounded-2xl bg-gradient-to-br from-primary to-secondary p-4 flex items-center justify-between shadow-lg shadow-primary/25">
             <div>
-               <p className="text-[11px] font-medium text-white/70">Credit Balance</p>
-               <p className="text-xl font-bold text-white leading-tight mt-0.5">$0.00</p>
+              <p className="text-[11px] font-medium text-white/70">
+                Credit Balance
+              </p>
+              <p className="text-xl font-bold text-white leading-tight mt-0.5">
+                $0.00
+              </p>
             </div>
-            
+
             <Link href="/dashboard/payment" className="flex-shrink-0">
-               <button className="h-10 w-10 rounded-xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors border border-white/20 backdrop-blur-sm">
-                  <Plus className="h-5 w-5" />
-               </button>
+              <button className="h-10 w-10 rounded-xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors border border-white/20 backdrop-blur-sm">
+                <Plus className="h-5 w-5" />
+              </button>
             </Link>
           </div>
         </div>
@@ -77,15 +80,15 @@ export function Sidebar() {
                 href={link.href}
                 className={`group flex items-center rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-[#f43f5e] text-white shadow-md shadow-rose-200"
-                    : "text-stone-500 hover:bg-rose-50 hover:text-[#f43f5e]"
+                    ? "bg-primary text-white shadow-md shadow-primary/30"
+                    : "text-muted-foreground hover:bg-primary/8 hover:text-primary"
                 }`}
               >
                 <Icon
                   className={`mr-3 h-5 w-5 flex-shrink-0 transition-colors duration-200 ${
                     isActive
                       ? "text-white"
-                      : "text-stone-400 group-hover:text-[#f43f5e]"
+                      : "text-muted-foreground group-hover:text-primary"
                   }`}
                   aria-hidden="true"
                 />
@@ -94,7 +97,7 @@ export function Sidebar() {
             );
           })}
         </nav>
-        
+
         <div className="p-4" />
       </div>
     </aside>

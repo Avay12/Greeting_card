@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,10 +43,10 @@ export default function RootLayout({
           geistSans.variable,
           geistMono.variable,
           outfit.variable,
-          "min-h-screen flex flex-col bg-gray-50",
+          "min-h-screen flex flex-col bg-background text-foreground",
         )}
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

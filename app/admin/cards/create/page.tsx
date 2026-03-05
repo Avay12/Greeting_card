@@ -71,10 +71,10 @@ export default function CreateCardPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 font-heading">
+        <h1 className="text-3xl font-bold text-foreground font-heading">
           Create Greeting Card
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-muted-foreground">
           Design a new greeting card for your users.
         </p>
       </div>
@@ -82,22 +82,22 @@ export default function CreateCardPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8"
+        className="bg-card rounded-2xl shadow-sm border border-border p-6 md:p-8"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 text-red-500 p-4 rounded-xl text-sm border border-red-100">
+            <div className="bg-destructive/10 text-destructive p-4 rounded-xl text-sm border border-destructive/20">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900 block ml-1">
+              <label className="text-sm font-semibold text-foreground block ml-1">
                 Title
               </label>
               <div className="relative">
-                <Type className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                <Type className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/60 z-10" />
                 <input
                   type="text"
                   name="title"
@@ -105,13 +105,13 @@ export default function CreateCardPage() {
                   onChange={handleChange}
                   placeholder="E.g., Happy Birthday Classic"
                   required
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  className="w-full bg-muted border border-border rounded-xl py-3 pl-12 pr-4 focus:bg-card focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-900 block ml-1">
+              <label className="text-sm font-semibold text-foreground block ml-1">
                 Category
               </label>
               <CustomSelect
@@ -119,17 +119,17 @@ export default function CreateCardPage() {
                 value={formData.category}
                 onChange={(val) => handleSelectChange("category", val)}
                 placeholder="Select category"
-                className="bg-gray-50"
+                className="bg-muted"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-900 block ml-1">
+            <label className="text-sm font-semibold text-foreground block ml-1">
               Thumbnail URL
             </label>
             <div className="relative">
-              <ImagePlus className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+              <ImagePlus className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/60 z-10" />
               <input
                 type="url"
                 name="thumbnailUrl"
@@ -137,13 +137,13 @@ export default function CreateCardPage() {
                 onChange={handleChange}
                 placeholder="https://example.com/image.jpg"
                 required
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                className="w-full bg-muted border border-border rounded-xl py-3 pl-12 pr-4 focus:bg-card focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-900 block ml-1">
+            <label className="text-sm font-semibold text-foreground block ml-1">
               Template Identifier
             </label>
             <CustomSelect
@@ -155,7 +155,7 @@ export default function CreateCardPage() {
                   ? "Select a template"
                   : "Select a category first"
               }
-              className="bg-gray-50"
+              className="bg-muted"
             />
           </div>
 

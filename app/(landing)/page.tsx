@@ -102,7 +102,7 @@ export default function Home() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute top-10 right-10 w-64 h-80 bg-white rounded-2xl shadow-xl border p-4 z-10"
+                className="absolute top-10 right-10 w-64 h-80 bg-card rounded-2xl shadow-xl border border-border p-4 z-10"
               >
                 <div className="w-full h-full bg-secondary/10 rounded-xl flex items-center justify-center">
                   <span className="text-4xl">🎂</span>
@@ -117,7 +117,7 @@ export default function Home() {
                   ease: "easeInOut",
                   delay: 1,
                 }}
-                className="absolute top-20 left-10 w-64 h-80 bg-white rounded-2xl shadow-xl border p-4 z-20"
+                className="absolute top-20 left-10 w-64 h-80 bg-card rounded-2xl shadow-xl border border-border p-4 z-20"
               >
                 <div className="w-full h-full bg-primary/10 rounded-xl flex items-center justify-center text-center">
                   <h1 className="font-heading font-black text-3xl leading-none text-primary">
@@ -133,7 +133,7 @@ export default function Home() {
       {/* 2. Our Collection Section */}
       <section id="collection" className="container mx-auto px-4 scroll-mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-[#e26b58] font-bold tracking-widest text-sm uppercase mb-3">
+          <p className="text-primary font-bold tracking-widest text-sm uppercase mb-3">
             CURATED SELECTION
           </p>
           <h2 className="font-heading text-5xl md:text-6xl font-bold mb-4 tracking-tighter">
@@ -153,8 +153,8 @@ export default function Home() {
               className={`px-6 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all duration-300 whitespace-nowrap
                 ${
                   activeTab === tab
-                    ? "bg-[#e26b58] text-white shadow-xl shadow-primary/20 -translate-y-0.5"
-                    : "bg-[#f5f1ea] text-foreground/70 hover:bg-[#eadecc]"
+                    ? "bg-primary text-white shadow-xl shadow-primary/25 -translate-y-0.5"
+                    : "bg-muted text-foreground/70 hover:bg-muted/80 hover:text-primary border border-border"
                 }
               `}
             >

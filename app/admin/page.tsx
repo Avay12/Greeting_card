@@ -23,43 +23,44 @@ export default function AdminDashboardPage() {
       label: "Total Users",
       value: users?.length.toString(),
       icon: Users,
-      color: "text-blue-600",
-      bg: "bg-blue-100",
+      color: "text-blue-500 dark:text-blue-400",
+      bg: "bg-blue-500/10",
     },
     {
       label: "Total Orders",
       value: orders?.length.toString(),
       icon: ShoppingBag,
-      color: "text-green-600",
-      bg: "bg-green-100",
+      color: "text-emerald-500 dark:text-emerald-400",
+      bg: "bg-emerald-500/10",
     },
     {
       label: "Available Cards",
       value: cards?.length.toString(),
       icon: CopyPlus,
-      color: "text-purple-600",
-      bg: "bg-purple-100",
+      color: "text-violet-500 dark:text-violet-400",
+      bg: "bg-violet-500/10",
     },
     {
       label: "Revenue",
       value: `$${orders?.reduce((acc, order) => acc + (order.TotalAmount || 0), 0).toFixed(2)}`,
       icon: Wand2,
-      color: "text-orange-600",
-      bg: "bg-orange-100",
+      color: "text-primary",
+      bg: "bg-primary/10",
     },
   ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 font-heading">
+        <h1 className="text-3xl font-bold text-foreground font-heading">
           Welcome back, {user?.name?.split(" ")[0]}! 👋
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-muted-foreground">
           Here's what's happening with your GreetingCards site today.
         </p>
       </div>
 
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
@@ -69,16 +70,16 @@ export default function AdminDashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4"
+              className="bg-card overflow-hidden rounded-2xl shadow-sm border border-border p-6 flex items-center gap-4 hover:shadow-md hover:shadow-primary/5 transition-shadow"
             >
               <div className={`p-4 rounded-xl ${stat.bg}`}>
                 <Icon className={`w-6 h-6 ${stat.color}`} />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500 truncate">
+                <p className="text-sm font-medium text-muted-foreground truncate">
                   {stat.label}
                 </p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">
+                <p className="mt-1 text-2xl font-semibold text-foreground">
                   {stat.value}
                 </p>
               </div>
@@ -87,40 +88,43 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
+      {/* Quick Actions & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 font-heading">
+        {/* Quick Actions */}
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-6">
+          <h2 className="text-xl font-bold text-foreground mb-4 font-heading">
             Quick Actions
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <Link
               href="/admin/cards/create"
-              className="group flex flex-col items-center justify-center p-6 bg-gray-50 rounded-xl hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
+              className="group flex flex-col items-center justify-center p-6 bg-muted rounded-xl hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all"
             >
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-3">
+              <div className="w-12 h-12 bg-card rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-3 border border-border">
                 <CopyPlus className="w-6 h-6 text-primary" />
               </div>
-              <span className="font-medium text-gray-900">New Card</span>
+              <span className="font-medium text-foreground">New Card</span>
             </Link>
 
             <Link
               href="/admin/links/create"
-              className="group flex flex-col items-center justify-center p-6 bg-gray-50 rounded-xl hover:bg-secondary/5 border border-transparent hover:border-secondary/20 transition-all"
+              className="group flex flex-col items-center justify-center p-6 bg-muted rounded-xl hover:bg-secondary/5 border border-transparent hover:border-secondary/20 transition-all"
             >
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-3">
+              <div className="w-12 h-12 bg-card rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-3 border border-border">
                 <Link2 className="w-6 h-6 text-secondary" />
               </div>
-              <span className="font-medium text-gray-900">Create Link</span>
+              <span className="font-medium text-foreground">Create Link</span>
             </Link>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 font-heading">
+        {/* Recent Activity */}
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-6">
+          <h2 className="text-xl font-bold text-foreground mb-4 font-heading">
             Recent Activity
           </h2>
-          <div className="flex flex-col items-center justify-center h-48 text-gray-500 space-y-3">
-            <Wand2 className="w-8 h-8 opacity-50" />
+          <div className="flex flex-col items-center justify-center h-48 text-muted-foreground space-y-3">
+            <Wand2 className="w-8 h-8 opacity-40" />
             <p>No recent activity yet.</p>
           </div>
         </div>

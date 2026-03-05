@@ -97,7 +97,7 @@ export default function ProductCard({
         </div>
 
         {product.component ? (
-          <div className="absolute inset-0 bg-[#fafafa] overflow-hidden flex items-center justify-center group-hover:bg-white transition-colors duration-700">
+          <div className="absolute inset-0 bg-muted/30 overflow-hidden flex items-center justify-center group-hover:bg-card transition-colors duration-700">
             <div className="w-[480px] pointer-events-none transform scale-[0.4] sm:scale-[0.45] lg:scale-[0.5] origin-center transition-transform duration-700 group-hover:scale-[0.45] sm:group-hover:scale-[0.5] lg:group-hover:scale-[0.55]">
               <product.component
                 {...(TEMPLATES_DATA[product.id]?.defaults || {})}
@@ -128,7 +128,7 @@ export default function ProductCard({
               "p-2.5 rounded-full shadow-lg backdrop-blur-md transition-all duration-300",
               favorited
                 ? "bg-primary text-white"
-                : "bg-white/80 text-foreground hover:bg-primary hover:text-white",
+                : "bg-card/80 text-foreground hover:bg-primary hover:text-white",
             )}
           >
             <Heart className={cn("w-5 h-5", favorited && "fill-current")} />
@@ -139,7 +139,7 @@ export default function ProductCard({
               "p-2.5 rounded-full shadow-lg backdrop-blur-md transition-all duration-300",
               isAdded
                 ? "bg-green-500 text-white"
-                : "bg-white/80 text-foreground hover:bg-primary hover:text-white",
+                : "bg-card/80 text-foreground hover:bg-primary hover:text-white",
             )}
           >
             {isAdded ? (

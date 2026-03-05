@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/store/useStore";
 import { useAuthStore } from "@/store/authStore";
 import { User as UserIcon, LogOut } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -54,7 +55,7 @@ export default function Navbar() {
         className={cn(
           "pointer-events-auto w-full flex items-center justify-between transition-all duration-500",
           isScrolled
-            ? "max-w-5xl glass bg-white/70 backdrop-blur-md shadow-lg rounded-full py-3 px-6 md:px-8 border border-white/40"
+            ? "max-w-5xl glass backdrop-blur-md shadow-lg rounded-full py-3 px-6 md:px-8"
             : "max-w-full bg-transparent py-5 px-4 md:px-8",
         )}
       >
@@ -67,9 +68,6 @@ export default function Navbar() {
             height={50}
             className="w-24 object-contain"
           />
-          {/* <span className="font-heading font-bold text-xl tracking-tight hidden sm:block text-foreground">
-            Joy<span className="text-primary">Greetly</span>
-          </span> */}
         </Link>
 
         {/* Desktop Nav */}
@@ -99,7 +97,10 @@ export default function Navbar() {
         </nav>
 
         {/* Icons */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle className="hidden sm:flex" />
+
           <button
             className="p-2 text-foreground/80 hover:text-primary transition-colors hidden sm:block"
             onClick={() => setSearchOpen(true)}
@@ -150,7 +151,7 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 ml-1">
                 <Link
                   href="/dashboard"
-                  className="p-2.5 bg-primary/5 hover:bg-primary/10 text-primary rounded-full transition-all border border-primary/10 shadow-sm"
+                  className="p-2.5 bg-primary/5 hover:bg-primary/15 text-primary rounded-full transition-all border border-primary/10 shadow-sm"
                   title="Your Dashboard"
                 >
                   <UserIcon className="w-5 h-5" />
@@ -158,7 +159,7 @@ export default function Navbar() {
                 <div className="w-[1px] h-6 bg-border mx-1" />
                 <button
                   onClick={() => logout()}
-                  className="p-2.5 bg-white shadow-sm border border-black/5 rounded-full hover:shadow-md hover:bg-red-50 hover:text-red-500 transition-all group/logout"
+                  className="p-2.5 bg-card shadow-sm border border-border rounded-full hover:shadow-md hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all group/logout"
                   title="Logout"
                 >
                   <LogOut className="w-5 h-5" />
@@ -199,7 +200,7 @@ export default function Navbar() {
             className={cn(
               "md:hidden pointer-events-auto w-full transition-all duration-300 overflow-hidden",
               isScrolled
-                ? "max-w-5xl mt-2 glass bg-white/70 backdrop-blur-md shadow-lg rounded-[2rem] border border-white/40"
+                ? "max-w-5xl mt-2 glass backdrop-blur-md shadow-lg rounded-[2rem]"
                 : "glass border-t mt-3",
             )}
           >
@@ -219,7 +220,14 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <div className="flex flex-col gap-2 px-4 pt-4 border-t mt-2">
+              <div className="flex flex-col gap-2 px-4 pt-4 border-t border-border mt-2">
+                {/* Theme toggle in mobile menu */}
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm font-medium text-foreground/80">
+                    Dark Mode
+                  </span>
+                  <ThemeToggle size="sm" />
+                </div>
                 {user ? (
                   <>
                     <Link

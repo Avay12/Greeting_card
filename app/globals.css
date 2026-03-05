@@ -22,108 +22,211 @@
 
 @layer base {
   :root {
+    /* ── Light Mode ───────────────────────────────── */
     --background: #fafaf9; /* Warm off-white */
-    --foreground: #1c1917; /* Soft black */
-    
-    --primary: #f43f5e; /* Rose 500 */
+    --foreground: #1c1917; /* Deep charcoal */
+
+    --primary: #f43f5e; /* Rose 500  */
     --primary-foreground: #ffffff;
-    
-    --secondary: #fb7185; /* Rose 400 */
+
+    --secondary: #fb7185; /* Rose 400  */
     --secondary-foreground: #ffffff;
-    
-    --accent: #fbcfe8; /* Pink 200 */
-    --accent-foreground: #831843; /* Pink 900 */
-    
+
+    --accent: #fbcfe8; /* Pink 200  */
+    --accent-foreground: #9d174d; /* Pink 800  */
+
     --muted: #f5f5f4; /* Stone 100 */
     --muted-foreground: #78716c; /* Stone 500 */
-    
+
     --border: #e7e5e4; /* Stone 200 */
-    
+
     --card: #ffffff;
     --card-foreground: #1c1917;
-    
+
     --radius: 1rem;
+
+    /* Pink glow tokens */
+    --glow-primary: rgba(244, 63, 94, 0.25);
+    --glow-secondary: rgba(251, 113, 133, 0.2);
   }
 
   .dark {
-    --background: #0c0a09; /* Deep stone */
-    --foreground: #fafaf9; /* Off-white */
-    
-    --primary: #fb7185; /* Rose 400 */
-    --primary-foreground: #000000;
-    
-    --secondary: #f43f5e; /* Rose 500 */
-    --secondary-foreground: #ffffff;
-    
-    --accent: #831843; /* Pink 900 */
-    --accent-foreground: #fbcfe8; /* Pink 200 */
-    
-    --muted: #1c1917; /* Soft black */
-    --muted-foreground: #a8a29e; /* Stone 400 */
-    
-    --border: #292524; /* Stone 800 */
-    
-    --card: #1c1917;
-    --card-foreground: #fafaf9;
+    /* ── Dark Mode — Rich Dark-Pink Grading ──────── */
+    --background: #0f0a0c; /* Near-black with warm pink undertone  */
+    --foreground: #f5e6ea; /* Warm pinkish-white                   */
+
+    --primary: #f43f5e; /* Rose 500 stays vibrant               */
+    --primary-foreground: #ffffff;
+
+    --secondary: #e11d48; /* Rose 600 – deeper for contrast       */
+    --secondary-foreground: #fecdd3; /* Rose 200                             */
+
+    --accent: #4a0d22; /* Deep burgundy-pink accent surface    */
+    --accent-foreground: #fda4af; /* Rose 300 on dark                     */
+
+    --muted: #1a0d12; /* Very dark pink-tinted surface        */
+    --muted-foreground: #9f7680; /* Desaturated rose for secondary text  */
+
+    --border: #2d1420; /* Subtle dark-rose border              */
+
+    --card: #160c10; /* Dark warm card        */
+    --card-foreground: #f5e6ea;
+
+    /* Pink glow — more intense in dark */
+    --glow-primary: rgba(244, 63, 94, 0.35);
+    --glow-secondary: rgba(225, 29, 72, 0.25);
   }
 }
 
+/* ── Smooth theme transitions ───────────────────── */
 @layer base {
   * {
     @apply border-border;
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
   }
+
+  /* But NOT transitions on interactive elements that need instant feedback */
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    transition-property:
+      background-color, border-color, color, box-shadow, transform, opacity;
+    transition-duration: 150ms;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Optional subtle gradient background */
-    background-image: radial-gradient(circle at top center, var(--accent) 0%, transparent 60%);
+
+    /* Light: soft pink radial bloom at top */
+    background-image: radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      var(--accent) 0%,
+      transparent 70%
+    );
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
+
+  .dark body {
+    /* Dark: deep rose glow from top-right corner */
+    background-image:
+      radial-gradient(
+        ellipse 60% 40% at 70% -5%,
+        rgba(244, 63, 94, 0.18) 0%,
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 40% 30% at 20% 95%,
+        rgba(157, 23, 77, 0.12) 0%,
+        transparent 60%
+      );
+  }
 }
 
+/* ── Glass utilities ────────────────────────────── */
 @layer utilities {
   .glass {
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
   }
 
   .dark .glass {
-    background-color: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(15, 10, 12, 0.75);
+    border-color: rgba(244, 63, 94, 0.12);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.4);
   }
-  
+
   .glass-card {
-    /* Merged glass classes */
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    /* Card classes */
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
     border-radius: 1rem;
-    transition-property: all;
+    transition-property: box-shadow, transform;
     transition-duration: 300ms;
   }
 
   .dark .glass-card {
-    background-color: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(22, 12, 16, 0.8);
+    border-color: rgba(244, 63, 94, 0.14);
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.5);
   }
-  
+
   .glass-card:hover {
     transform: translateY(-0.25rem);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 20px 40px -8px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(244, 63, 94, 0.08);
   }
-  
+
+  .dark .glass-card:hover {
+    box-shadow:
+      0 20px 40px -8px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(244, 63, 94, 0.18);
+  }
+
+  /* Gradient text */
   .text-gradient {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    background-image: linear-gradient(to right, var(--primary), var(--secondary));
+    background-image: linear-gradient(
+      135deg,
+      var(--primary) 0%,
+      var(--secondary) 100%
+    );
+  }
+
+  /* Pink glow shadow */
+  .shadow-glow {
+    box-shadow:
+      0 0 24px var(--glow-primary),
+      0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .shadow-glow {
+    box-shadow:
+      0 0 32px var(--glow-primary),
+      0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
+  /* Themed surface helpers – used by multiple components */
+  .surface {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+  }
+
+  .surface-muted {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
   }
 }

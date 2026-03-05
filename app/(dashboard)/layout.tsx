@@ -9,7 +9,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-[#fafaf9]">
+    <div className="flex min-h-screen bg-background">
       {/* Mobile Header (Hidden on Desktop) */}
       <MobileHeader />
 
@@ -17,14 +17,14 @@ export default function DashboardLayout({
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      
+
       {/* Main Content Area - Offsets fixed sidebar */}
       <div className="flex flex-1 flex-col w-full md:pl-64">
         {/* Desktop Header (Hidden on Mobile) */}
         <div className="hidden md:block">
           <Header />
         </div>
-        
+
         {/* Main Content offset for Header height and Mobile Nav bottom padding */}
         <main className="flex-1 pt-14 md:pt-16 pb-20 md:pb-0">
           <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">{children}</div>

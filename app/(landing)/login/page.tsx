@@ -56,7 +56,7 @@ function LoginForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white/80 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-white/50 relative overflow-hidden"
+        className="w-full max-w-md bg-card/80 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-border relative overflow-hidden"
       >
         {/* Decorative Background Blobs */}
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
@@ -87,7 +87,7 @@ function LoginForm() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm text-center">
+              <div className="bg-red-500/10 text-red-500 p-3 rounded-xl text-sm text-center border border-red-500/20">
                 {error}
               </div>
             )}
@@ -138,13 +138,13 @@ function LoginForm() {
           </form>
 
           <div className="relative my-8 text-center">
-            <hr className="border-muted-foreground/20" />
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs text-muted-foreground uppercase font-bold tracking-widest">
+            <hr className="border-border" />
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-4 text-xs text-muted-foreground uppercase font-bold tracking-widest">
               Or continue with
             </span>
           </div>
 
-          <button className="w-full bg-white border border-muted hover:bg-muted/50 text-foreground font-semibold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all">
+          <button className="w-full bg-card border border-border hover:bg-muted/50 text-foreground font-semibold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all">
             <Chrome className="w-5 h-5 text-primary" />
             Google
           </button>

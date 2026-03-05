@@ -17,6 +17,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function AdminLayout({
   children,
@@ -40,7 +41,7 @@ export default function AdminLayout({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
@@ -55,13 +56,13 @@ export default function AdminLayout({
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Users", href: "/admin/users", icon: Users },
     { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
-    { name: "Cards", href: "/admin/cards", icon: PlusSquare }, // Reused PlusSquare, consider switching to View
+    { name: "Cards", href: "/admin/cards", icon: PlusSquare },
     { name: "Create Link", href: "/admin/links/create", icon: LinkIcon },
     { name: "Manage Site", href: "/admin/manage", icon: Settings },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-background flex">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div
@@ -72,11 +73,12 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-200 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } flex flex-col`}
       >
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+        {/* Sidebar Header */}
+        <div className="h-16 flex items-center justify-between px-6 border-b border-border">
           <Link href="/admin" className="flex items-center gap-2">
             <Image
               src="/logo.png"
@@ -85,18 +87,19 @@ export default function AdminLayout({
               height={50}
               className="w-12 h-12 object-contain"
             />
-            <span className="text-xl font-bold font-heading tracking-wide text-gray-900">
+            <span className="text-xl font-bold font-heading tracking-wide text-foreground">
               Greeting<span className="ml-1 text-primary">Admin</span>
             </span>
           </Link>
           <button
-            className="lg:hidden text-gray-500 hover:text-gray-700"
+            className="lg:hidden text-muted-foreground hover:text-foreground transition-colors"
             onClick={() => setIsSidebarOpen(false)}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
+        {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="space-y-1 px-3">
             {navLinks.map((link) => {
@@ -109,11 +112,11 @@ export default function AdminLayout({
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                     isActive
                       ? "bg-primary/10 text-primary font-medium"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   <Icon
-                    className={`w-5 h-5 ${isActive ? "text-primary" : "text-gray-400"}`}
+                    className={`w-5 h-5 ${isActive ? "text-primary" : "text-muted-foreground"}`}
                   />
                   {link.name}
                 </Link>
@@ -122,21 +125,24 @@ export default function AdminLayout({
           </nav>
         </div>
 
-        <div className="p-4 border-t border-gray-200">
+        {/* User Footer */}
+        <div className="p-4 border-t border-border">
           <div className="flex items-center gap-3 mb-4 px-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
               {user?.name?.charAt(0).toUpperCase() || "U"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-foreground truncate">
                 {user?.name}
               </p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {user?.email}
+              </p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-500 rounded-lg hover:bg-red-500/10 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -146,26 +152,39 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center px-4">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <Link href="/admin" className="ml-4 flex items-center gap-2">
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={24}
-              height={24}
-              className="w-6 h-6 object-contain"
-            />
-            <span className="text-lg font-bold font-heading tracking-wide text-gray-900">
-              Greeting<span className="text-primary">Admin</span>
-            </span>
-          </Link>
+        {/* Mobile Top Header */}
+        <header className="lg:hidden h-16 bg-card border-b border-border flex items-center justify-between px-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <Link href="/admin" className="flex items-center gap-2">
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={24}
+                height={24}
+                className="w-6 h-6 object-contain"
+              />
+              <span className="text-lg font-bold font-heading tracking-wide text-foreground">
+                Greeting<span className="text-primary">Admin</span>
+              </span>
+            </Link>
+          </div>
+          <ThemeToggle size="sm" />
         </header>
+
+        {/* Desktop top bar with theme toggle */}
+        <div className="hidden lg:flex h-12 border-b border-border bg-card/50 backdrop-blur-sm items-center justify-end px-8 gap-3">
+          <span className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">
+            Admin Panel
+          </span>
+          <div className="w-px h-4 bg-border" />
+          <ThemeToggle size="sm" />
+        </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
           {children}

@@ -182,11 +182,7 @@ export default function SearchModal() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[200] flex flex-col items-center"
-          style={{
-            background: "rgba(255,255,255,0.92)",
-            backdropFilter: "blur(20px)",
-          }}
+          className="fixed inset-0 z-[200] flex flex-col items-center glass bg-background/90"
           onClick={(e) => {
             if (e.target === e.currentTarget) handleClose();
           }}
@@ -194,7 +190,7 @@ export default function SearchModal() {
           {/* Close button */}
           <button
             onClick={handleClose}
-            className="absolute top-6 right-6 p-2.5 rounded-full bg-black/5 hover:bg-black/10 transition-colors"
+            className="absolute top-6 right-6 p-2.5 rounded-full bg-muted hover:bg-primary/10 transition-colors"
             aria-label="Close search"
           >
             <X className="w-5 h-5 text-foreground/70" />
@@ -224,7 +220,7 @@ export default function SearchModal() {
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                className="w-full bg-white border-2 border-border rounded-full py-4 pl-14 pr-14 text-lg font-medium placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all shadow-xl shadow-black/5"
+                className="w-full bg-card border-2 border-border rounded-full py-4 pl-14 pr-14 text-lg font-medium placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-all shadow-xl shadow-black/5"
               />
               {query && (
                 <button
@@ -246,7 +242,7 @@ export default function SearchModal() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
                   transition={{ duration: 0.15 }}
-                  className="mt-3 bg-white rounded-2xl border border-border shadow-2xl overflow-hidden"
+                  className="mt-3 bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
                 >
                   {results.length === 0 ? (
                     <div className="py-10 text-center">
@@ -373,7 +369,7 @@ export default function SearchModal() {
                         key={occasion.slug}
                         href={`/occasions/${occasion.slug}`}
                         onClick={handleClose}
-                        className="flex flex-col items-center gap-2.5 p-4 bg-white rounded-2xl border border-border hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-0.5 transition-all group cursor-pointer"
+                        className="flex flex-col items-center gap-2.5 p-4 bg-card rounded-2xl border border-border hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-0.5 transition-all group cursor-pointer"
                       >
                         <span className="text-3xl">{occasion.emoji}</span>
                         <span className="text-sm font-semibold text-foreground/80 group-hover:text-primary transition-colors text-center leading-tight">
