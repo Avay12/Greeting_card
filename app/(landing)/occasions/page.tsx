@@ -83,7 +83,7 @@ const CATEGORIES = [
     description: "Holiday and seasonal greetings for every time of year.",
     icon: Snowflake,
     image:
-      "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1507041957456-9c397ce39c97?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#e3f2fd]", // Light blue
     iconColor: "text-[#42a5f5]",
     hoverColor: "group-hover:text-[#42a5f5]",
@@ -95,7 +95,7 @@ const CATEGORIES = [
       "Celebrate years of love and partnership with our elegant cards.",
     icon: Sparkles,
     image:
-      "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#fefce8]", // Soft yellow/gold
     iconColor: "text-[#d97706]",
     hoverColor: "group-hover:text-[#d97706]",
@@ -106,7 +106,7 @@ const CATEGORIES = [
     description: "Welcome the little ones with adorable cards and invitations.",
     icon: Baby,
     image:
-      "https://images.unsplash.com/photo-1519689689253-3c9f28d098e6?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1594300907312-c6603f83b2c6?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#f0fdf4]", // Soft green
     iconColor: "text-[#16a34a]",
     hoverColor: "group-hover:text-[#16a34a]",
@@ -117,7 +117,7 @@ const CATEGORIES = [
     description: "Honoring achievements and bright futures ahead.",
     icon: GraduationCap,
     image:
-      "https://images.unsplash.com/photo-1523050853064-dbad350c7469?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#eff6ff]", // Soft blue
     iconColor: "text-[#2563eb]",
     hoverColor: "group-hover:text-[#2563eb]",
@@ -128,7 +128,7 @@ const CATEGORIES = [
     description: "Thoughtful messages of support during difficult times.",
     icon: Flower2,
     image:
-      "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1547098842-dcdd773e3390?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#f8fafc]", // Muted slate
     iconColor: "text-[#475569]",
     hoverColor: "group-hover:text-[#475569]",
@@ -140,7 +140,7 @@ const CATEGORIES = [
       "Spread festive cheer with our magical holiday card collection.",
     icon: Bell,
     image:
-      "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#fef2f2]", // Light red
     iconColor: "text-[#dc2626]",
     hoverColor: "group-hover:text-[#dc2626]",
@@ -152,7 +152,7 @@ const CATEGORIES = [
       "Ring in a fresh start with sparkling resolutions and greetings.",
     icon: Stars,
     image:
-      "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1573690706484-86f444f0b940?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#f5f3ff]", // Light violet
     iconColor: "text-[#7c3aed]",
     hoverColor: "group-hover:text-[#7c3aed]",
@@ -163,7 +163,7 @@ const CATEGORIES = [
     description: "Share your blessings and gratitude with family and friends.",
     icon: Leaf,
     image:
-      "https://images.unsplash.com/photo-1574044536225-1e3089d7b426?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1510194638421-92f54ce46444?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#fff7ed]", // Light orange
     iconColor: "text-[#ea580c]",
     hoverColor: "group-hover:text-[#ea580c]",
@@ -175,7 +175,7 @@ const CATEGORIES = [
       "Light up the lives of your loved ones with festive Diwali cards.",
     icon: Flame,
     image:
-      "https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1605292356183-a77d0a9c9d1d?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#fffbeb]", // Light amber
     iconColor: "text-[#b45309]",
     hoverColor: "group-hover:text-[#b45309]",
@@ -187,7 +187,7 @@ const CATEGORIES = [
       "Celebrate the victory of good over evil with our special cards.",
     icon: Sword,
     image:
-      "https://images.unsplash.com/photo-1561414927-6d86591d0c4f?auto=format&fit=crop&q=80&w=400&h=400",
+      "https://images.unsplash.com/photo-1698205352833-a4c25ef0a4f0?auto=format&fit=crop&q=80&w=400&h=400",
     bgColor: "bg-[#fff1f2]", // Light rose/crimson
     iconColor: "text-[#be123c]",
     hoverColor: "group-hover:text-[#be123c]",
