@@ -27,6 +27,8 @@ import {
   Sword,
   ArrowRight,
   ShoppingCart,
+  X,
+  PlayCircle
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import Image from "next/image";
@@ -36,6 +38,89 @@ import { TEMPLATES, TemplateMetadata } from "@/lib/data/template";
 import { TEMPLATE_COMPONENTS } from "@/components/templates";
 import { useAuthStore } from "@/store/authStore";
 import api from "@/lib/api";
+import AudioPicker, { AudioPlayerBar } from "@/components/templates/AudioPicker";
+import BackgroundPicker from "@/components/templates/BackgroundPicker";
+import { BACKGROUND_SCENES } from "@/lib/data/backgrounds";
+import { SceneBackground } from "@/components/templates/SceneBackground";
+
+// ─── Demo Preview Modal ───────────────────────────────────────────────────────
+function DemoModal({
+  templateId,
+  customData,
+  audioUrl,
+  trackName,
+  sceneId,
+  onClose,
+}: {
+  templateId: string;
+  customData: Record<string, any>;
+  audioUrl: string | null;
+  trackName?: string;
+  sceneId: string;
+  onClose: () => void;
+}) {
+  const TemplateComponent = TEMPLATE_COMPONENTS[templateId];
+  const scene = BACKGROUND_SCENES.find((s) => s.id === sceneId) ?? BACKGROUND_SCENES[0];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden"
+      style={{ ...scene.style, zIndex: 100 }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm -z-10" />
+      {/* Animated particle scene */}
+      <SceneBackground type={scene.sceneType} />
+      <motion.div
+        initial={{ scale: 0.9, y: 30 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 30 }}
+        transition={{ type: "spring", damping: 22 }}
+        className="relative w-full max-w-sm flex flex-col gap-4"
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors z-50"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Label */}
+        <div className="text-center z-50">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest shadow-lg">
+            <Eye className="w-3 h-3" /> Recipient Demo
+          </span>
+        </div>
+
+        {/* Template */}
+        <div className="rounded-[2rem] overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] relative z-50">
+          {TemplateComponent ? (
+            <TemplateComponent {...(customData as any)} />
+          ) : (
+            <div className="bg-card p-16 text-center text-muted-foreground">
+              No preview available
+            </div>
+          )}
+        </div>
+
+        {/* Audio player — auto-plays when demo opens */}
+        {audioUrl && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="z-50">
+            <AudioPlayerBar src={audioUrl} label={trackName || "Audio Message"} autoPlay />
+          </motion.div>
+        )}
+
+        <p className="text-center text-white/70 text-xs drop-shadow z-50 shadow-black">
+          This is exactly how your recipient will see the card
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 const CATEGORIES = [
   {
@@ -228,6 +313,8 @@ export default function GenerateLinkPage() {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copying, setCopying] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
+  const [selectedSceneId, setSelectedSceneId] = useState("none");
 
   const isInCart = selectedProduct
     ? cart.some((item) => item.id === selectedProduct.id)
@@ -294,6 +381,19 @@ export default function GenerateLinkPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setCustomData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAudioChange = (audioUrl: string | null, trackName?: string) => {
+    setCustomData((prev) => ({
+      ...prev,
+      audioUrl: audioUrl || undefined,
+      audioTrackName: trackName || undefined,
+    }));
+  };
+
+  const handleBgChange = (sceneId: string) => {
+    setSelectedSceneId(sceneId);
+    setCustomData((prev) => ({ ...prev, bgSceneId: sceneId }));
   };
 
   const saveAndGenerateLink = async () => {
@@ -483,18 +583,28 @@ export default function GenerateLinkPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col gap-6"
           >
-            <div className="flex bg-muted p-1 rounded-2xl w-fit self-center lg:self-start border border-border shadow-inner">
+            <div className="flex items-center gap-3 self-center lg:self-start flex-wrap">
+              <div className="flex bg-muted p-1 rounded-2xl w-fit border border-border shadow-inner">
+                <button
+                  onClick={() => setActiveTab("preview")}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "preview" ? "bg-card shadow-md text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  <Eye className="w-4 h-4" /> Live Preview
+                </button>
+                <button
+                  onClick={() => setActiveTab("customize")}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "customize" ? "bg-card shadow-md text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  <Edit3 className="w-4 h-4" /> Customize
+                </button>
+              </div>
+
+              {/* Demo button */}
               <button
-                onClick={() => setActiveTab("preview")}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "preview" ? "bg-card shadow-md text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setShowDemo(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors shadow-md shadow-primary/20"
               >
-                <Eye className="w-4 h-4" /> Live Preview
-              </button>
-              <button
-                onClick={() => setActiveTab("customize")}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "customize" ? "bg-card shadow-md text-primary" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                <Edit3 className="w-4 h-4" /> Customize
+                <PlayCircle className="w-4 h-4" /> Demo
               </button>
             </div>
 
@@ -526,6 +636,20 @@ export default function GenerateLinkPage() {
                           />
                         )}
                       </div>
+                    )}
+
+                    {/* Audio badge on preview */}
+                    {customData.audioUrl && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute bottom-4 left-4 right-4"
+                      >
+                        <AudioPlayerBar
+                          src={customData.audioUrl}
+                          label={customData.audioTrackName}
+                        />
+                      </motion.div>
                     )}
                   </motion.div>
                 ) : (
@@ -562,6 +686,29 @@ export default function GenerateLinkPage() {
                           />
                         </div>
                       ))}
+
+                      {/* Background scene */}
+                      <div className="pt-4 border-t border-border">
+                        <BackgroundPicker
+                          value={selectedSceneId}
+                          onChange={handleBgChange}
+                        />
+                      </div>
+
+                      {/* Audio section */}
+                      <div className="pt-4 border-t border-border">
+                        <AudioPicker
+                          value={customData.audioUrl || null}
+                          trackName={customData.audioTrackName}
+                          onChange={handleAudioChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-10 p-5 bg-amber-50 dark:bg-amber-950/20 rounded-3xl border border-amber-100 dark:border-amber-900/30">
+                      <p className="text-xs font-bold text-amber-800 dark:text-amber-400 leading-relaxed italic">
+                        * Your changes update in real-time in the "Live Preview" tab. Click <strong>Demo</strong> to see the full experience as your recipient will.
+                      </p>
                     </div>
                   </motion.div>
                 )}
@@ -697,6 +844,20 @@ export default function GenerateLinkPage() {
           </motion.div>
         </div>
       )}
+
+      {/* Demo Modal */}
+      <AnimatePresence>
+        {showDemo && (
+          <DemoModal
+            templateId={selectedProduct?.id}
+            customData={customData}
+            audioUrl={customData.audioUrl || null}
+            trackName={customData.audioTrackName}
+            sceneId={selectedSceneId}
+            onClose={() => setShowDemo(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

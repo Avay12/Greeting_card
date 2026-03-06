@@ -5,6 +5,8 @@ function getRoleFromToken(token: string): string | null {
   try {
     const payload = token.split(".")[1];
     const decoded = JSON.parse(atob(payload));
+    console.log("decoded", decoded);
+    console.log("payload", payload);
     return decoded.role ?? null;
   } catch {
     return null;

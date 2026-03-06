@@ -30,6 +30,7 @@ function SnowScene() {
       rotation: number,
       alpha: number
     ) {
+      if (!ctx) return;
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(rotation);
@@ -107,6 +108,7 @@ function SnowScene() {
     }));
 
     function tick() {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (const f of flakes) {
@@ -175,6 +177,7 @@ function CelebrationScene() {
     }
 
     function makePiece(side: "left" | "right" | "top"): Piece {
+      if (!canvas) return {} as Piece;
       const shape: Shape = (["rect","rect","circle","ribbon","rect"] as Shape[])[Math.floor(Math.random()*5)];
       const w = shape === "ribbon" ? 4+Math.random()*4 : 7+Math.random()*12;
       const h = shape === "ribbon" ? 16+Math.random()*10 : 7+Math.random()*12;
@@ -223,6 +226,7 @@ function CelebrationScene() {
     ];
 
     function drawPiece(p: Piece) {
+      if (!ctx) return;
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rotation);
@@ -263,6 +267,7 @@ function CelebrationScene() {
     }, 3000);
 
     function tick() {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (const p of pieces) {
         p.vy += p.gravity;
@@ -312,6 +317,7 @@ function RosePetalScene() {
     const PETAL_COLORS = ["#ff2d55","#ff6b8a","#c9184a","#ff8fa3","#ffb3c1","#ff4d6d","#a10035","#ff94b0"];
 
     function drawPetal(x:number,y:number,size:number,rot:number,color:string,alpha:number,scaleY:number) {
+      if (!ctx) return;
       ctx.save();
       ctx.translate(x,y);
       ctx.rotate(rot);
@@ -345,6 +351,7 @@ function RosePetalScene() {
     }
 
     function makePetal(side:"left"|"right"|"top"): Petal {
+      if (!canvas) return {} as Petal;
       let sx=0,sy=0,svx=0,svy=0;
       if (side==="left") {
         sx=-10; sy=canvas.height*(0.5+Math.random()*0.25);
@@ -384,6 +391,7 @@ function RosePetalScene() {
     }, 3200);
 
     function tick() {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0,0,canvas.width,canvas.height);
       for (const p of petals) {
         p.vy+=p.gravity; p.vx*=p.drag; p.vy*=p.drag;
