@@ -28,7 +28,7 @@ import {
   ArrowRight,
   ShoppingCart,
   X,
-  PlayCircle
+  PlayCircle,
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import Image from "next/image";
@@ -38,7 +38,9 @@ import { TEMPLATES, TemplateMetadata } from "@/lib/data/template";
 import { TEMPLATE_COMPONENTS } from "@/components/templates";
 import { useAuthStore } from "@/store/authStore";
 import api from "@/lib/api";
-import AudioPicker, { AudioPlayerBar } from "@/components/templates/AudioPicker";
+import AudioPicker, {
+  AudioPlayerBar,
+} from "@/components/templates/AudioPicker";
 import BackgroundPicker from "@/components/templates/BackgroundPicker";
 import { BACKGROUND_SCENES } from "@/lib/data/backgrounds";
 import { SceneBackground } from "@/components/templates/SceneBackground";
@@ -60,7 +62,8 @@ function DemoModal({
   onClose: () => void;
 }) {
   const TemplateComponent = TEMPLATE_COMPONENTS[templateId];
-  const scene = BACKGROUND_SCENES.find((s) => s.id === sceneId) ?? BACKGROUND_SCENES[0];
+  const scene =
+    BACKGROUND_SCENES.find((s) => s.id === sceneId) ?? BACKGROUND_SCENES[0];
 
   return (
     <motion.div
@@ -109,8 +112,17 @@ function DemoModal({
 
         {/* Audio player — auto-plays when demo opens */}
         {audioUrl && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="z-50">
-            <AudioPlayerBar src={audioUrl} label={trackName || "Audio Message"} autoPlay />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="z-50"
+          >
+            <AudioPlayerBar
+              src={audioUrl}
+              label={trackName || "Audio Message"}
+              autoPlay
+            />
           </motion.div>
         )}
 
@@ -707,7 +719,9 @@ export default function GenerateLinkPage() {
 
                     <div className="mt-10 p-5 bg-amber-50 dark:bg-amber-950/20 rounded-3xl border border-amber-100 dark:border-amber-900/30">
                       <p className="text-xs font-bold text-amber-800 dark:text-amber-400 leading-relaxed italic">
-                        * Your changes update in real-time in the "Live Preview" tab. Click <strong>Demo</strong> to see the full experience as your recipient will.
+                        * Your changes update in real-time in the "Live Preview"
+                        tab. Click <strong>Demo</strong> to see the full
+                        experience as your recipient will.
                       </p>
                     </div>
                   </motion.div>
@@ -774,72 +788,85 @@ export default function GenerateLinkPage() {
 
             {/* Generate & Share Section */}
             <div className="mt-auto border-t border-border pt-8">
-              {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                className={`w-full mb-4 py-4 rounded-[1.5rem] font-black text-lg flex justify-center items-center gap-3 transition-all border-2 ${
-                  isInCart || addedToCart
-                    ? "border-green-500 bg-green-500/10 text-green-500"
-                    : "border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white"
-                }`}
-              >
-                {addedToCart ? (
-                  <>
-                    <Check className="w-5 h-5" /> Added to Cart!
-                  </>
-                ) : isInCart ? (
-                  <>
-                    <ShoppingCart className="w-5 h-5" /> Already in Cart
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5" /> Add to Cart
-                  </>
+              <div
+                className={cn(
+                  "flex gap-4",
+                  !shareUrl ? "flex-col sm:flex-row" : "flex-col",
                 )}
-              </button>
-
-              {!shareUrl ? (
+              >
+                {/* Add to Cart Button */}
                 <button
-                  onClick={saveAndGenerateLink}
-                  disabled={isSaving}
-                  className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-primary to-secondary text-white font-black text-xl flex justify-center items-center gap-3 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25 transition-all shadow-md group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
-                >
-                  {isSaving ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <Share2 className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                  onClick={handleAddToCart}
+                  className={cn(
+                    "py-5 rounded-[1.5rem] font-black text-lg flex justify-center items-center gap-3 transition-all border-2",
+                    !shareUrl ? "flex-1" : "w-full",
+                    isInCart || addedToCart
+                      ? "border-green-500 bg-green-500/10 text-green-500"
+                      : "border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white",
                   )}
-                  Generate & Share Preview Link
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none" />
-                </button>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-muted rounded-[1.5rem] p-6 border border-border"
                 >
-                  <div className="flex items-center gap-2 mb-4">
-                    <Check className="w-5 h-5 text-green-500" />
-                    <p className="text-sm font-bold text-foreground uppercase tracking-widest">
-                      Link Generated Successfully
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      readOnly
-                      value={shareUrl}
-                      className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium text-foreground outline-none focus:border-primary"
-                    />
-                    <button
-                      onClick={copyToClipboard}
-                      className="px-6 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all flex items-center gap-2"
-                    >
-                      {copying ? "Copied!" : "Copy"}
-                    </button>
-                  </div>
-                </motion.div>
-              )}
+                  {addedToCart ? (
+                    <>
+                      <Check className="w-5 h-5" />{" "}
+                      {!shareUrl ? "Added!" : "Added to Cart!"}
+                    </>
+                  ) : isInCart ? (
+                    <>
+                      <ShoppingCart className="w-5 h-5" />{" "}
+                      {!shareUrl ? "In Cart" : "Already in Cart"}
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5" /> Add to Cart
+                    </>
+                  )}
+                </button>
+
+                {!shareUrl ? (
+                  <button
+                    onClick={saveAndGenerateLink}
+                    disabled={isSaving}
+                    className="flex-[1.5] py-5 rounded-[1.5rem] bg-gradient-to-r from-primary to-secondary text-white font-black text-lg flex justify-center items-center gap-3 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25 transition-all shadow-md group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
+                  >
+                    {isSaving ? (
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    ) : (
+                      <Share2 className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    )}
+                    <span className="whitespace-nowrap">
+                      Generate & Share Link
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none" />
+                  </button>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-muted rounded-[1.5rem] p-6 border border-border w-full"
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <Check className="w-5 h-5 text-green-500" />
+                      <p className="text-sm font-bold text-foreground uppercase tracking-widest">
+                        Link Generated Successfully
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={shareUrl}
+                        className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium text-foreground outline-none focus:border-primary min-w-0"
+                      />
+                      <button
+                        onClick={copyToClipboard}
+                        className="px-6 py-3 sm:py-0 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+                      >
+                        {copying ? "Copied!" : "Copy Link"}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </div>
           </motion.div>
         </div>
