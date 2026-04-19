@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import {
   ArrowLeft,
   Check,
   Share2,
-  ShieldQuestion,
-  Truck,
   Edit3,
   Eye,
   Loader2,
@@ -28,7 +27,11 @@ import {
   ArrowRight,
   ShoppingCart,
   X,
-  PlayCircle
+  PlayCircle,
+  Wallet,
+  Music,
+  Mic,
+  AlertCircle,
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import Image from "next/image";
@@ -42,6 +45,10 @@ import AudioPicker, { AudioPlayerBar } from "@/components/templates/AudioPicker"
 import BackgroundPicker from "@/components/templates/BackgroundPicker";
 import { BACKGROUND_SCENES } from "@/lib/data/backgrounds";
 import { SceneBackground } from "@/components/templates/SceneBackground";
+
+// ─── Pricing add-ons (mirrors backend GetCardPricing) ───────────────────────
+const MUSIC_TRACK_ADDON = 1.0;    // preset music track
+const VOICE_RECORDING_ADDON = 2.0; // user-uploaded voice recording
 
 // ─── Demo Preview Modal ───────────────────────────────────────────────────────
 function DemoModal({
@@ -296,7 +303,7 @@ const CATEGORIES = [
 type ViewState = "categories" | "products" | "details";
 
 export default function GenerateLinkPage() {
-  const { user } = useAuthStore();
+  const { user, checkAuth } = useAuthStore();
   const { addToCart, cart } = useStore();
 
   // State
@@ -396,7 +403,38 @@ export default function GenerateLinkPage() {
     setCustomData((prev) => ({ ...prev, bgSceneId: sceneId }));
   };
 
+  const copyToClipboard = () => {
+    if (shareUrl) {
+      navigator.clipboard.writeText(shareUrl);
+      setCopying(true);
+      setTimeout(() => setCopying(false), 2000);
+    }
+  };
+
+  // ── Computed price (base + audio add-ons) ──────────────────────────────────
+  const computedPrice = useMemo(() => {
+    let price = selectedProduct?.price || 0;
+    if (customData.audioUrl) {
+      // audioTrackName is set for preset tracks; absent for user-uploaded recordings
+      if (customData.audioTrackName) {
+        price += MUSIC_TRACK_ADDON;
+      } else {
+        price += VOICE_RECORDING_ADDON;
+      }
+    }
+    return price;
+  }, [selectedProduct, customData.audioUrl, customData.audioTrackName]);
+
+  const canAfford = !!user && user.credit >= computedPrice;
+  const shortfall = Math.max(0, computedPrice - (user?.credit || 0));
+
   const saveAndGenerateLink = async () => {
+    if (!user) {
+      alert("Please login first.");
+      return;
+    }
+    if (!canAfford) return; // button is hidden, safety guard
+
     setIsSaving(true);
     try {
       const response = await api.post("/cards", {
@@ -405,30 +443,22 @@ export default function GenerateLinkPage() {
         description: selectedProduct.description,
         image_url: selectedProduct.image,
         occasion: selectedProduct.category,
-        price: selectedProduct.price,
+        price: computedPrice,          // send computed total (includes add-ons)
         custom_data: JSON.stringify(customData),
       });
 
-      const cardId = response.data.id;
+      // Backend now returns { card, order }
+      const cardId = response.data.card?.id ?? response.data.id;
       const url = `${window.location.protocol}//${window.location.host}/preview/${cardId}`;
       setShareUrl(url);
-    } catch (error) {
+
+      // Refresh balance so UI reflects the deduction immediately
+      await checkAuth();
+    } catch (error: any) {
       console.error("Failed to save and share card:", error);
-      // Fallback generating client-side only encoded link
-      const shareData = { id: selectedProduct.id, fields: customData };
-      const encoded = btoa(encodeURIComponent(JSON.stringify(shareData)));
-      const url = `${window.location.protocol}//${window.location.host}/preview/${encoded}`;
-      setShareUrl(url);
+      alert(error.response?.data?.error || "Failed to generate link.");
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const copyToClipboard = () => {
-    if (shareUrl) {
-      navigator.clipboard.writeText(shareUrl);
-      setCopying(true);
-      setTimeout(() => setCopying(false), 2000);
     }
   };
 
@@ -730,19 +760,50 @@ export default function GenerateLinkPage() {
               {selectedProduct.name}
             </h1>
 
-            <div className="flex items-center gap-6 mb-8">
-              <p className="text-4xl font-black text-primary tracking-tight">
-                ${selectedProduct.price?.toFixed(2) || "0.00"}
-              </p>
-              <div className="flex flex-col">
-                <p className="text-muted-foreground line-through font-bold text-sm">
-                  ${((selectedProduct.price || 0) + 5).toFixed(2)}
+            {/* ── Dynamic price display ─────────────────────────────────── */}
+            <div className="flex items-start gap-4 mb-6 flex-wrap">
+              <div>
+                <p className="text-4xl font-black text-primary tracking-tight">
+                  ${computedPrice.toFixed(2)}
                 </p>
-                <p className="text-green-500 text-[10px] font-black uppercase tracking-widest">
-                  Save 15% Today
+                <p className="text-xs text-muted-foreground font-semibold mt-1">
+                  Base: ${(selectedProduct.price || 0).toFixed(2)}
                 </p>
               </div>
+              {/* Add-on badges */}
+              {customData.audioUrl && (
+                <div className="flex flex-col gap-1.5 mt-1">
+                  {customData.audioTrackName ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-500/10 text-violet-600 text-xs font-bold border border-violet-500/20">
+                      <Music className="w-3 h-3" /> Music +${MUSIC_TRACK_ADDON.toFixed(2)}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 text-orange-600 text-xs font-bold border border-orange-500/20">
+                      <Mic className="w-3 h-3" /> Voice +${VOICE_RECORDING_ADDON.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
+
+            {/* ── Wallet balance indicator ──────────────────────────────── */}
+            {user && (
+              <div className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold mb-6 border",
+                canAfford
+                  ? "bg-green-500/8 border-green-500/20 text-green-700 dark:text-green-400"
+                  : "bg-red-500/8 border-red-500/20 text-red-700 dark:text-red-400"
+              )}>
+                <Wallet className="w-4 h-4 flex-shrink-0" />
+                <span>Your balance: <strong>${user.credit.toFixed(2)}</strong></span>
+                {!canAfford && (
+                  <span className="ml-auto flex items-center gap-1 text-xs">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    Need ${shortfall.toFixed(2)} more
+                  </span>
+                )}
+              </div>
+            )}
 
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed font-medium">
               {selectedProduct.description}
@@ -799,19 +860,29 @@ export default function GenerateLinkPage() {
               </button>
 
               {!shareUrl ? (
-                <button
-                  onClick={saveAndGenerateLink}
-                  disabled={isSaving}
-                  className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-primary to-secondary text-white font-black text-xl flex justify-center items-center gap-3 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25 transition-all shadow-md group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
-                >
-                  {isSaving ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <Share2 className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  )}
-                  Generate & Share Preview Link
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none" />
-                </button>
+                canAfford ? (
+                  <button
+                    onClick={saveAndGenerateLink}
+                    disabled={isSaving}
+                    className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-primary to-secondary text-white font-black text-xl flex justify-center items-center gap-3 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25 transition-all shadow-md group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
+                  >
+                    {isSaving ? (
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    ) : (
+                      <Share2 className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    )}
+                    Generate & Share Preview Link
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none" />
+                  </button>
+                ) : (
+                  <Link href="/dashboard/payment" className="block">
+                    <button className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-xl flex justify-center items-center gap-3 hover:opacity-90 hover:shadow-lg hover:shadow-orange-500/25 transition-all shadow-md group relative overflow-hidden">
+                      <Wallet className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                      Load Wallet — need ${shortfall.toFixed(2)} more
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shine pointer-events-none" />
+                    </button>
+                  </Link>
+                )
               ) : (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}

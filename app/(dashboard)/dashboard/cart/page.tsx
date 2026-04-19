@@ -12,7 +12,13 @@ import {
 import { useStore } from "@/store/useStore";
 import Image from "next/image";
 
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
+import { Loader2 } from "lucide-react";
+
 export default function CartPage() {
+  const router = useRouter();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [activeTab, setActiveTab] = useState<"cart" | "favorites">("cart");
   const {
     cart,
@@ -21,7 +27,31 @@ export default function CartPage() {
     cartTotal,
     favorites,
     toggleFavorite,
+    clearCart,
   } = useStore();
+
+  const handleCheckout = async () => {
+    if (cart.length === 0) return;
+    setIsCheckingOut(true);
+    try {
+      const orderItems = cart.map((item) => ({
+        card_id: typeof item.id === "string" ? parseInt(item.id) : item.id,
+        quantity: item.quantity,
+      }));
+
+      await api.post("/orders", {
+        items: orderItems,
+      });
+
+      alert("Order placed successfully!");
+      clearCart();
+      router.push("/dashboard");
+    } catch (error: any) {
+      alert(error.response?.data?.error || "Failed to place order.");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   // We need to fetch favorite product details if we had a real API.
   // For demo, we just show their IDs or a placeholder if the ID isn't in cart.
@@ -177,8 +207,21 @@ export default function CartPage() {
                     </div>
                   </div>
                   <div className="mt-8">
-                    <button className="flex w-full items-center justify-center rounded-xl bg-primary px-6 py-3 text-base font-bold shadow-md shadow-primary/20 hover:bg-primary/90 text-white transition-colors">
-                      <CreditCard className="mr-2 h-5 w-5" /> Checkout
+                    <button
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="flex w-full items-center justify-center rounded-xl bg-primary px-6 py-3 text-base font-bold shadow-md shadow-primary/20 hover:bg-primary/90 text-white transition-colors disabled:opacity-50"
+                    >
+                      {isCheckingOut ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="mr-2 h-5 w-5" /> Checkout
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>

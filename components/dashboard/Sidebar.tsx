@@ -15,10 +15,12 @@ import {
   Plus,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeProvider";
+import { useAuthStore } from "@/store/authStore";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { theme } = useTheme();
+  const { user } = useAuthStore();
 
   const links = [
     { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -58,7 +60,7 @@ export function Sidebar() {
                 Credit Balance
               </p>
               <p className="text-xl font-bold text-white leading-tight mt-0.5">
-                $0.00
+                ${user?.credit?.toFixed(2) || "0.00"}
               </p>
             </div>
 

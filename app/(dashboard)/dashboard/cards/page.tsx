@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Edit2,
   Trash2,
@@ -8,51 +8,96 @@ import {
   Link as LinkIcon,
   Plus,
   ShoppingCart,
+  Loader2,
+  X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Mock Data
-const mockCards = [
-  {
-    id: "1",
-    name: "Netflix Premium - Family",
-    category: "Entertainment",
-    date: "2024-03-15",
-    clicks: 145,
-    status: "active",
-    image:
-      "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=100&auto=format&fit=crop&q=60",
-  },
-  {
-    id: "2",
-    name: "Amazon Prime Summer Sale",
-    category: "Shopping",
-    date: "2024-03-10",
-    clicks: 89,
-    status: "active",
-    image:
-      "https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&auto=format&fit=crop&q=60",
-  },
-  {
-    id: "3",
-    name: "VPN Service - Annual",
-    category: "Services",
-    date: "2024-02-28",
-    clicks: 230,
-    status: "inactive",
-    image:
-      "https://images.unsplash.com/photo-1563206767-5b18f218e8de?w=100&auto=format&fit=crop&q=60",
-  },
-];
+import api from "@/lib/api";
+import { Card } from "@/types/api";
+import BackgroundPicker from "@/components/templates/BackgroundPicker";
 
 export default function CardLinksPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [cards, setCards] = useState<Card[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredCards = mockCards.filter(
+  // Edit Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingCard, setEditingCard] = useState<Card | null>(null);
+  const [editData, setEditData] = useState<Record<string, any>>({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    fetchCards();
+  }, []);
+
+  const fetchCards = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.get("/cards");
+      setCards(Array.isArray(response.data) ? response.data : (response.data.cards || []));
+    } catch (error) {
+      console.error("Failed to fetch cards:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this link? This action cannot be undone.")) return;
+    try {
+      await api.delete(`/cards/${id}`);
+      fetchCards();
+    } catch (error) {
+      console.error("Failed to delete card:", error);
+      alert("Failed to delete card.");
+    }
+  };
+
+  const handleEditClick = (card: Card) => {
+    setEditingCard(card);
+    let parsed = {};
+    if (card.custom_data) {
+      try {
+        parsed = JSON.parse(card.custom_data);
+      } catch (e) {
+        console.error("Failed to parse custom data", e);
+      }
+    }
+    setEditData(parsed);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingCard) return;
+    setIsSaving(true);
+    try {
+      const payload = { ...editingCard, custom_data: JSON.stringify(editData) };
+      await api.put(`/cards/${editingCard.id}`, payload);
+      setIsEditModalOpen(false);
+      fetchCards();
+    } catch (error) {
+      console.error("Failed to update card:", error);
+      alert("Failed to update card.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setEditData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const filteredCards = cards.filter(
     (card) =>
-      card.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      card.category.toLowerCase().includes(searchTerm.toLowerCase()),
+      card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      card.occasion.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  // Extract text fields, excluding audio/background fields
+  const textFields = Object.keys(editData).filter(
+    (k) => k !== "audioUrl" && k !== "audioTrackName" && k !== "bgSceneId"
   );
 
   return (
@@ -155,7 +200,18 @@ export default function CardLinksPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-card">
-                {filteredCards.length > 0 ? (
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-20 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                          Loading links...
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : filteredCards.length > 0 ? (
                   filteredCards.map((card) => (
                     <tr
                       key={card.id}
@@ -163,62 +219,64 @@ export default function CardLinksPage() {
                     >
                       <td className="whitespace-nowrap px-6 py-5">
                         <div className="flex items-center">
-                          <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-[1rem] border border-border shadow-sm">
-                            <img
-                              src={card.image}
-                              alt=""
-                              className="h-full w-full object-cover"
-                            />
+                          <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-[1rem] border border-border shadow-sm bg-muted flex items-center justify-center">
+                            {card.image_url ? (
+                              <img
+                                src={card.image_url}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <LinkIcon className="h-5 w-5 text-muted-foreground/30" />
+                            )}
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-bold text-foreground">
-                              {card.name}
+                              {card.title}
                             </div>
-                            <div className="flex items-center mt-1 text-xs font-semibold text-primary hover:text-primary/80 cursor-pointer">
+                            <Link
+                              href={`/preview/${card.id}`}
+                              className="flex items-center mt-1 text-xs font-semibold text-primary hover:text-primary/80 cursor-pointer"
+                            >
                               <LinkIcon className="mr-1 h-3 w-3" />
-                              joygreetly.com/ref/{card.id}
-                            </div>
+                              joygreetly.com/preview/{card.id}
+                            </Link>
                           </div>
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-6 py-5">
                         <span className="inline-flex rounded-xl bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                          {card.category}
+                          {card.occasion}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-5">
                         <div className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                          {card.clicks}{" "}
+                          0{" "}
                           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                             clicks
                           </span>
                         </div>
                         <div className="text-xs mt-1">
-                          {card.status === "active" ? (
-                            <span className="text-green-500 font-bold flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />{" "}
-                              Active
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground font-bold flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 rounded-full bg-border" />{" "}
-                              Inactive
-                            </span>
-                          )}
+                          <span className="text-green-500 font-bold flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />{" "}
+                            Active
+                          </span>
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-6 py-5 text-sm font-semibold text-muted-foreground">
-                        {card.date}
+                        {new Date(card.created_at).toLocaleDateString()}
                       </td>
                       <td className="whitespace-nowrap px-6 py-5 text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <button
+                            onClick={() => handleEditClick(card)}
                             className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-all"
                             title="Edit"
                           >
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
+                            onClick={() => handleDelete(card.id)}
                             className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
                             title="Delete"
                           >
@@ -243,6 +301,65 @@ export default function CardLinksPage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && editingCard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <div className="bg-card w-full max-w-lg rounded-[2rem] border border-border shadow-2xl p-6 sm:p-8 relative">
+            <button
+              onClick={() => setIsEditModalOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h2 className="text-2xl font-black mb-6">Edit Link Information</h2>
+            
+            <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+              {textFields.map((field) => (
+                <div key={field} className="space-y-2 group">
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-focus-within:text-primary transition-colors">
+                    {field.replace(/([A-Z])/g, " $1").trim()}
+                  </label>
+                  <input
+                    type="text"
+                    value={editData[field] || ""}
+                    onChange={(e) => handleInputChange(field, e.target.value)}
+                    className="w-full rounded-[1rem] border-2 border-transparent bg-muted/60 px-4 py-3 text-sm font-bold focus:border-primary/20 focus:bg-card focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all"
+                  />
+                </div>
+              ))}
+
+              <div className="pt-4 border-t border-border">
+                <BackgroundPicker
+                  value={editData.bgSceneId || "none"}
+                  onChange={(sceneId) => handleInputChange("bgSceneId", sceneId)}
+                />
+              </div>
+
+              <div className="mt-4 p-4 bg-muted/50 rounded-2xl border border-border/50 text-xs text-muted-foreground italic space-y-1">
+                <p><strong>Note:</strong> Audio recordings cannot be modified after checkout.</p>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end gap-3 pt-4 border-t border-border">
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-6 py-2.5 rounded-xl font-bold text-sm text-muted-foreground hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                disabled={isSaving}
+                className="px-6 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

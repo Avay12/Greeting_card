@@ -8,28 +8,70 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Wallet, History, TrendingUp, Plus, ShoppingCart } from "lucide-react";
+import { Wallet, History, TrendingUp, Plus, ShoppingCart, Loader2 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-// Mock Data
-const chartData = [
-  { name: "Week 1", spent: 100 },
-  { name: "Week 2", spent: 250 },
-  { name: "Week 3", spent: 180 },
-  { name: "Week 4", spent: 450 },
-];
+import api from "@/lib/api";
+import { Card, Order } from "@/types/api";
 
 export default function DashboardOverview() {
   const { user } = useAuthStore();
   const [isMounted, setIsMounted] = useState(false);
+  
+  const [cards, setCards] = useState<Card[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const [cardsRes, ordersRes] = await Promise.all([
+        api.get("/cards"),
+        api.get("/orders"),
+      ]);
+      setCards(Array.isArray(cardsRes.data) ? cardsRes.data : cardsRes.data?.cards || []);
+      setOrders(Array.isArray(ordersRes.data) ? ordersRes.data : ordersRes.data?.orders || []);
+    } catch (error) {
+      console.error("Failed to fetch dashboard data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!isMounted) return null;
+
+  const totalCards = cards.length;
+  const totalSpend = orders.reduce((acc, order) => acc + (order.total_amount || 0), 0);
+  const totalOrders = orders.length;
+  const userCredit = user?.credit || 0;
+
+  // Compute dynamic chart data
+  const generateChartData = () => {
+    if (orders.length === 0) {
+      return [
+        { name: "Week 1", spent: 0 },
+        { name: "Week 2", spent: 0 },
+        { name: "Week 3", spent: 0 },
+        { name: "Week 4", spent: 0 },
+      ];
+    }
+    const sorted = [...orders].sort(
+      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+    return sorted.map((o) => ({
+      name: new Date(o.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      spent: o.total_amount,
+    }));
+  };
+
+  const chartData = generateChartData();
+  const completedOrders = orders.filter(o => o.status === "completed" || o.status === "paid");
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 pb-12">
@@ -57,7 +99,7 @@ export default function DashboardOverview() {
               </div>
               <div className="flex items-end justify-between">
                 <p className="text-3xl font-black tracking-tight flex items-start">
-                  <span className="text-xl align-top mt-1 mr-0.5">$</span>0.00
+                  <span className="text-xl align-top mt-1 mr-0.5">$</span>{userCredit.toFixed(2)}
                 </p>
                 <button className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/20 hover:bg-white/30 transition-colors h-9 px-4 text-sm font-bold text-white border-0 backdrop-blur-sm">
                   <Plus className="w-4 h-4" />
@@ -72,7 +114,7 @@ export default function DashboardOverview() {
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-card border border-border rounded-xl p-3 text-center shadow-sm">
             <History className="w-5 h-5 mx-auto mb-1.5 text-primary" />
-            <p className="text-lg font-black text-foreground">0</p>
+            <p className="text-lg font-black text-foreground">{totalCards}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">
               Total Cards
             </p>
@@ -81,7 +123,7 @@ export default function DashboardOverview() {
           <div className="bg-card border border-border rounded-xl p-3 text-center shadow-sm">
             <TrendingUp className="w-5 h-5 mx-auto mb-1.5 text-emerald-500" />
             <p className="text-lg font-black text-foreground flex items-start justify-center">
-              <span className="text-[12px] align-top mt-1 mr-0.5">$</span>0.00
+              <span className="text-[12px] align-top mt-1 mr-0.5">$</span>{totalSpend.toFixed(2)}
             </p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">
               Total Spend
@@ -93,7 +135,7 @@ export default function DashboardOverview() {
             className="bg-card border border-border rounded-xl p-3 text-center shadow-sm block hover:bg-muted transition-colors"
           >
             <ShoppingCart className="w-5 h-5 mx-auto mb-1.5 text-primary" />
-            <p className="text-lg font-black text-foreground">0</p>
+            <p className="text-lg font-black text-foreground">{totalOrders}</p>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">
               Total Carts
             </p>
@@ -107,17 +149,31 @@ export default function DashboardOverview() {
               Recent Activity
             </h2>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm">
-            <History className="w-10 h-10 mx-auto mb-3 text-primary/20" />
-            <p className="text-sm font-medium text-muted-foreground mb-4">
-              No activity yet
-            </p>
-            <Link href="/dashboard/generate-link">
-              <button className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 transition-colors h-10 px-5 text-sm font-bold text-white shadow-md shadow-primary/25">
-                Browse Cards
-              </button>
-            </Link>
-          </div>
+          {orders.length > 0 ? (
+            <div className="flex flex-col gap-3">
+              {orders.slice(0, 3).map((o) => (
+                <div key={o.id} className="bg-card border border-border rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-bold">Order #{o.id}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleDateString()}</p>
+                  </div>
+                  <p className="text-sm font-bold text-primary">${o.total_amount.toFixed(2)}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm">
+              <History className="w-10 h-10 mx-auto mb-3 text-primary/20" />
+              <p className="text-sm font-medium text-muted-foreground mb-4">
+                No activity yet
+              </p>
+              <Link href="/dashboard/generate-link">
+                <button className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 transition-colors h-10 px-5 text-sm font-bold text-white shadow-md shadow-primary/25">
+                  Browse Cards
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -142,7 +198,7 @@ export default function DashboardOverview() {
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 Wallet
               </p>
-              <p className="text-3xl font-black text-foreground">$0.00</p>
+              <p className="text-3xl font-black text-foreground">${userCredit.toFixed(2)}</p>
             </div>
             <div className="flex-shrink-0 h-14 w-14 rounded-[1rem] bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
               <Wallet className="h-6 w-6 text-emerald-500" />
@@ -164,7 +220,10 @@ export default function DashboardOverview() {
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 Total Cards
               </p>
-              <p className="text-3xl font-black text-foreground">0</p>
+              <div className="text-3xl font-black text-foreground flex items-center gap-3">
+                {totalCards}
+                {isLoading && <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />}
+              </div>
             </div>
             <div className="flex-shrink-0 h-14 w-14 rounded-[1rem] bg-primary/10 flex items-center justify-center border border-primary/20">
               <History className="h-6 w-6 text-primary" />
@@ -186,7 +245,10 @@ export default function DashboardOverview() {
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 Total Spend
               </p>
-              <p className="text-3xl font-black text-foreground">$0.00</p>
+              <div className="text-3xl font-black text-foreground flex items-center gap-3">
+                ${totalSpend.toFixed(2)}
+                {isLoading && <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />}
+              </div>
             </div>
             <div className="flex-shrink-0 h-14 w-14 rounded-[1rem] bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
               <svg
@@ -217,17 +279,17 @@ export default function DashboardOverview() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-foreground">
-                  Growth Analytics
+                  Purchases Analytics
                 </h2>
                 <p className="text-xs font-medium text-muted-foreground mt-0.5">
-                  Last 30 days performance
+                  All-time performance
                 </p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-black text-primary">+0%</p>
+              <p className="text-2xl font-black text-primary">${totalSpend.toFixed(2)}</p>
               <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider">
-                ↑ vs last month
+                Total Volume
               </p>
             </div>
           </div>
@@ -296,13 +358,34 @@ export default function DashboardOverview() {
         {/* Right Side: Total Delivered */}
         <div className="p-8 lg:w-1/3 bg-muted/40 flex flex-col">
           <p className="text-sm font-bold text-muted-foreground mb-8 uppercase tracking-widest">
-            Total Delivered
+            Delivered Orders
           </p>
 
-          <div className="flex-1 flex items-center justify-center min-h-[150px]">
-            <p className="text-sm font-semibold text-muted-foreground">
-              No completed orders yet
-            </p>
+          <div className="flex-1 flex flex-col gap-4 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+            {completedOrders.length > 0 ? (
+              completedOrders.map(order => (
+                <div key={order.id} className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-bold text-foreground">Order #{order.id}</span>
+                    <span className="text-xs font-semibold text-green-500 bg-green-500/10 px-2.5 py-0.5 rounded-full">
+                      {order.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(order.created_at).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm font-black text-primary mt-1">
+                    ${order.total_amount.toFixed(2)}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-sm font-semibold text-muted-foreground text-center">
+                  No completed orders yet
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

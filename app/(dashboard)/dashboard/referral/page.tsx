@@ -17,10 +17,10 @@ export default function ReferralPage() {
   const [isCopied, setIsCopied] = useState(false);
   const [friendCode, setFriendCode] = useState("");
 
-  // Generate a mock referral link based on user ID or a random string
-  const referralCode = user?.name
-    ? user.name.toLowerCase().replace(/\s+/g, "") + "50"
-    : "user50";
+  // Generate a pseudo-referral code using user's ID
+  const referralCode = user?.id
+    ? `REF-${user.name?.split(" ")[0].toUpperCase()}-${user.id}`
+    : "REF-USER";
   const referralLink = `https://joygreetly.com/join?ref=${referralCode}`;
 
   const handleCopy = () => {
