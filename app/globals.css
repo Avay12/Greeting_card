@@ -64,12 +64,12 @@
     --accent: #4a0d22; /* Deep burgundy-pink accent surface    */
     --accent-foreground: #fda4af; /* Rose 300 on dark                     */
 
-    --muted: #1a0d12; /* Very dark pink-tinted surface        */
+    --muted: #160c0f; /* Very dark pink-tinted surface        */
     --muted-foreground: #9f7680; /* Desaturated rose for secondary text  */
 
-    --border: #2d1420; /* Subtle dark-rose border              */
+    --border: #54313e; /* Brighter border for better definition */
 
-    --card: #160c10; /* Dark warm card        */
+    --card: #2a1b21; /* Significantly lightened for better contrast */
     --card-foreground: #f5e6ea;
 
     /* Pink glow — more intense in dark */
@@ -159,8 +159,8 @@
   }
 
   .dark .glass-card {
-    background-color: rgba(22, 12, 16, 0.8);
-    border-color: rgba(244, 63, 94, 0.14);
+    background-color: rgba(42, 27, 33, 0.8);
+    border-color: rgba(244, 63, 94, 0.28);
     box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.5);
   }
 
